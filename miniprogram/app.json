@@ -21,6 +21,9 @@
     "navigationBarTitleText": "扫码快捷登记系统",
     "navigationBarTextStyle": "black"
   },
+  "usingComponents": {
+    "cu-custom": "/colorui/components/cu-custom"
+  },
   "sitemapLocation": "sitemap.json",
   "style": "v2"
 }

@@ -1,27 +1,22 @@
 <!--index.wxml-->
-<view class="container">
+<view class="flex flex-direction">
 
-  <view class="title">扫码登记设备</view>
+  <view class="title margin">扫码登记设备</view>
 
-  <view class="top_tip">扫码登记或输入20位设备码</view>
+  <view class="top_tip margin">扫码登记或输入20位设备码</view>
 
-  <button style="margin: 30rpx 0" type="primary" bindtap="scan">扫码登记</button>
+  <button type="primary" bindtap="scan">扫码登记</button>
 
   <form catchsubmit="formSubmit" catchreset="formReset">
-    <view class="page-section">
-      <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__bd" style="margin: 30rpx 0">
-            <input class="weui-input" name="id" value="{{curId}}" placeholder="输入20位设备码" />
-          </view>
+    <view class="weui-cells weui-cells_after-title margin">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__bd" style="margin: 30rpx 0">
+          <input class="weui-input" name="id" value="{{curId}}" placeholder="输入20位设备码" />
         </view>
       </view>
     </view>
-
-    <view class="weui-btn-area">
-      <button style="margin: 30rpx 0" type="primary" formType="submit">去登记</button>
-      <button style="margin: 30rpx 0" formType="reset">重置</button>
-    </view>
+    <button type="primary" formType="submit">去登记</button>
+    <button formType="reset">重置</button>
   </form>
 
   <view class="power" wx:key="title" wx:for="{{powerList}}" wx:for-item="power">
@@ -44,7 +39,7 @@
     </view>
   </view>
 
-  <view class="environment" bindtap="onChangeShowEnvChoose">当前环境 {{ selectedEnv.alias }}</view>
+  <view class="environment padding text-center" bindtap="onChangeShowEnvChoose">当前环境 {{ selectedEnv.alias }}</view>
 
   <cloud-tip-modal showUploadTipProps="{{showUploadTip}}"></cloud-tip-modal>
 

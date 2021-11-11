@@ -26,7 +26,6 @@ page {
   margin-top: 30rpx;
   border-radius: 5px;
   background-color: white;
-  width: 93%;
   padding-bottom: 1rpx;
 }
 
