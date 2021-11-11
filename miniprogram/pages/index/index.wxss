@@ -92,3 +92,13 @@ page {
   font-size: 24rpx;
   margin-top: 25%;
 }
+.button {
+  width: 300rpx;
+  text-align: center;
+  margin: 30rpx auto 0 auto;
+  height: 80rpx;
+  color: white;
+  border-radius: 5px;
+  line-height: 80rpx;
+  background-color: #07c160;
+}

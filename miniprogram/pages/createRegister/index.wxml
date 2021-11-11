@@ -1,0 +1,143 @@
+<view class="page" data-weui-theme="{{theme}}">
+	<view class="weui-form">
+		<view class="weui-form__text-area">
+			<h2 class="weui-form__title">设备登记表</h2>
+			<view class="weui-form__desc">填写登记表单</view>
+		</view>
+		<view class="weui-form__control-area">
+			<view class="weui-cells__group weui-cells__group_form">
+				<view class="weui-cells__title">表单组标题</view>
+				<view class="weui-cells weui-cells_form">
+					<view class="weui-cell weui-cell_active">
+						<view class="weui-cell__hd"><label class="weui-label">微信号</label></view>
+						<view class="weui-cell__bd">
+							<input class="weui-input" placeholder="填写本人微信号" placeholder-class="weui-input__placeholder" />
+						</view>
+					</view>
+					<view class="weui-cell weui-cell_active">
+						<view class="weui-cell__hd">							
+                            <label class="weui-label">昵称</label>
+                        </view>
+						<view class="weui-cell__bd">
+							<input class="weui-input" placeholder="填写本人微信号的昵称" placeholder-class="weui-input__placeholder" />
+						</view>
+					</view>
+					<view class="weui-cell weui-cell_active">
+						<view class="weui-cell__hd">							
+                            <label class="weui-label">联系电话</label>
+                        </view>
+						<view class="weui-cell__bd">
+							<input class="weui-input" placeholder="填写绑定的电话号码" type="number" placeholder-class="weui-input__placeholder" />
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="weui-form__tips-area">
+			<view class="weui-form__tips">
+                表单页提示，居中对齐
+			</view>
+		</view>
+		<view class="weui-form__opr-area">
+			<a class="weui-btn weui-btn_primary">确定</a>
+		</view>
+		<view class="weui-form__tips-area">
+			<view class="weui-form__tips">
+                表单页提示，居中对齐
+			</view>
+		</view>
+		<view class="weui-form__extra-area">
+			<view class="weui-footer">
+				<view class="weui-footer__links">
+					<a href="javascript:" class="weui-footer__link">底部链接文本</a>
+				</view>
+				<view class="weui-footer__text">Copyright © 2008-2019 weui.io</view>
+			</view>
+		</view>
+	</view>
+</view>
+
+
+<view class="margin page-body">
+  <form catchsubmit="formSubmit" catchreset="formReset">
+    <view class="page-section">
+      <view class="page-section-title">ID：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="company" value="{{curId}}" placeholder="请输入公司名称" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">公司名称：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="company" placeholder="请输入公司名称" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">厂区名称：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="plantArea" placeholder="请输入厂区名称" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">产线名称：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="productionLine" placeholder="请输入产线名称" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">设备型号：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="equipmentModel" placeholder="请输入设备型号" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">位置：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="location" placeholder="请选择位置" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">填报人：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="filledBy" placeholder="请输入填报人" value="张三" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">联系电话：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="contact" placeholder="请输入联系电话" value="15901228151" />
+          </view>
+        </view>
+      </view>
+      <view class="page-section-title">上报日期：</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd" style="margin: 30rpx 0">
+            <input class="weui-input" name="reportDate" placeholder="请输入上报日期" value="2021-8-28" />
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-area">
+      <button style="margin: 30rpx 0" type="primary" formType="submit">提交</button>
+      <button style="margin: 30rpx 0" formType="reset">重填</button>
+    </view>
+  </form>
+</view>

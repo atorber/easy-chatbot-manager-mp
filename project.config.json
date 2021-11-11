@@ -37,7 +37,7 @@
     "minifyWXSS": true
   },
   "appid": "wxdb87a064478d2e7e",
-  "projectname": "miniprogram-1",
+  "projectname": "%E8%AE%BE%E5%A4%87%E7%A0%81",
   "libVersion": "2.14.1",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {
