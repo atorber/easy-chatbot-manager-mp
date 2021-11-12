@@ -6,6 +6,8 @@
   <view class="top_tip margin">扫码登记或输入20位设备码</view>
 
   <button type="primary" bindtap="scan">扫码登记</button>
+  <button type="primary" bindtap="sendWxmsg">发消息</button>
+  <button type="primary" bindtap="testSend">发消息2</button>
 
   <form catchsubmit="formSubmit" catchreset="formReset">
     <view class="weui-cells weui-cells_after-title margin">

@@ -24,6 +24,11 @@
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom"
   },
+  "permissions": {
+    "openapi": [
+      "templateMessage.send"
+    ]
+  },
   "sitemapLocation": "sitemap.json",
   "style": "v2"
 }
