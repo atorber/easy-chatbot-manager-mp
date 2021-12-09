@@ -1,0 +1,8 @@
+{
+  "disableScroll": true,
+  "navigationBarTitleText": "emoji",
+  "usingComponents": {
+    "mp-emoji": "@miniprogram-component-plus/emoji"
+
+  }
+}

@@ -1,128 +1,122 @@
-//app.js
-require('./libs/Mixins.js');
-
-const themeListeners = [];
+const config = require('./config')
+const themeListeners = []
+global.isDemo = true
 App({
-  globalData: {
-    theme: 'light', // dark
-    ColorList: [{
-      title: '嫣红',
-      name: 'red',
-      color: '#e54d42'
-    },
-    {
-      title: '桔橙',
-      name: 'orange',
-      color: '#f37b1d'
-    },
-    {
-      title: '明黄',
-      name: 'yellow',
-      color: '#fbbd08'
-    },
-    {
-      title: '橄榄',
-      name: 'olive',
-      color: '#8dc63f'
-    },
-    {
-      title: '森绿',
-      name: 'green',
-      color: '#39b54a'
-    },
-    {
-      title: '天青',
-      name: 'cyan',
-      color: '#1cbbb4'
-    },
-    {
-      title: '海蓝',
-      name: 'blue',
-      color: '#0081ff'
-    },
-    {
-      title: '姹紫',
-      name: 'purple',
-      color: '#6739b6'
-    },
-    {
-      title: '木槿',
-      name: 'mauve',
-      color: '#9c26b0'
-    },
-    {
-      title: '桃粉',
-      name: 'pink',
-      color: '#e03997'
-    },
-    {
-      title: '棕褐',
-      name: 'brown',
-      color: '#a5673f'
-    },
-    {
-      title: '玄灰',
-      name: 'grey',
-      color: '#8799a3'
-    },
-    {
-      title: '草灰',
-      name: 'gray',
-      color: '#aaaaaa'
-    },
-    {
-      title: '墨黑',
-      name: 'black',
-      color: '#333333'
-    },
-    {
-      title: '雅白',
-      name: 'white',
-      color: '#ffffff'
-    },
-  ]
-  },
-  onLaunch: function () {
+  
+  onLaunch(opts, data) {
+    const that = this;
+    const canIUseSetBackgroundFetchToken = wx.canIUse('setBackgroundFetchToken')
+    if (canIUseSetBackgroundFetchToken) {
+      wx.setBackgroundFetchToken({
+        token: 'getBackgroundFetchToken',
+      })
+    }
+    if (wx.getBackgroundFetchData) {
+      wx.getBackgroundFetchData({
+        fetchType: 'pre',
+        success(res) {
+          that.globalData.backgroundFetchData  = res;
+          console.log('读取预拉取数据成功')
+        },
+        fail() {
+          console.log('读取预拉取数据失败')
+          wx.showToast({
+            title: '无缓存数据',
+            icon: 'none'
+          })
+        },
+        complete() {
+          console.log('结束读取')
+        }
+      })
+    }
+    console.log('App Launch', opts)
+    if (data && data.path) {
+      wx.navigateTo({
+        url: data.path,
+      })
+    }
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
       wx.cloud.init({
-        // env 参数说明：
-        //   env 参数决定接下来小程序发起的云开发调用（wx.cloud.xxx）会默认请求到哪个云环境的资源
-        //   此处请填入环境 ID, 环境 ID 可打开云控制台查看
-        //   如不填则使用默认环境（第一个创建的环境）
-        // env: 'my-env-id',
+        env: config.envId,
         traceUser: true,
       })
     }
-    wx.getSystemInfo({
-      success: e => {
-        this.globalData.StatusBar = e.statusBarHeight;
-        let capsule = wx.getMenuButtonBoundingClientRect();
-		if (capsule) {
-		 	this.globalData.Custom = capsule;
-			this.globalData.CustomBar = capsule.bottom + capsule.top - e.statusBarHeight;
-		} else {
-			this.globalData.CustomBar = e.statusBarHeight + 50;
-		}
-      }
+  },
+
+  
+  onShow(opts) {
+    console.log('App Show', opts)
+    // console.log(wx.getSystemInfoSync())
+  },
+  onHide() {
+    console.log('App Hide')
+  },
+  onThemeChange({ theme }) {
+    this.globalData.theme = theme
+    themeListeners.forEach((listener) => {
+        listener(theme)
     })
   },
-  themeChanged(theme) {
-    this.globalData.theme = theme;
-    themeListeners.forEach((listener) => {
-      listener(theme);
-    });
-  },
   watchThemeChange(listener) {
-    if (themeListeners.indexOf(listener) < 0) {
-      themeListeners.push(listener);
-    }
+      if (themeListeners.indexOf(listener) < 0) {
+          themeListeners.push(listener)
+      }
   },
   unWatchThemeChange(listener) {
-    const index = themeListeners.indexOf(listener);
-    if (index > -1) {
-      themeListeners.splice(index, 1);
+      const index = themeListeners.indexOf(listener)
+      if (index > -1) {
+          themeListeners.splice(index, 1)
+      }
+  },
+  globalData: {
+    theme: wx.getSystemInfoSync().theme,
+    hasLogin: false,
+    openid: null,
+    iconTabbar: '/page/weui/example/images/icon_tabbar.png',
+  },
+  // lazy loading openid
+  getUserOpenId(callback) {
+    const self = this
+
+    if (self.globalData.openid) {
+      callback(null, self.globalData.openid)
+    } else {
+      wx.login({
+        success(data) {
+          wx.cloud.callFunction({
+            name: 'login',
+            data: {
+              action: 'openid'
+            },
+            success: res => {
+              console.log('拉取openid成功', res)
+              self.globalData.openid = res.result.openid
+              callback(null, self.globalData.openid)
+            },
+            fail: err => {
+              console.log('拉取用户openid失败，将无法正常使用开放接口等服务', res)
+              callback(res)
+            }
+          })
+        },
+        fail(err) {
+          console.log('wx.login 接口调用失败，将无法正常使用开放接口等服务', err)
+          callback(err)
+        }
+      })
     }
   },
+  // 通过云函数获取用户 openid，支持回调或 Promise
+  getUserOpenIdViaCloud() {
+    return wx.cloud.callFunction({
+      name: 'wxContext',
+      data: {}
+    }).then(res => {
+      this.globalData.openid = res.result.openid
+      return res.result.openid
+    })
+  }
 })
