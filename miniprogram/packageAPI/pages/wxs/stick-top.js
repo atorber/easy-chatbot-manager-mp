@@ -1,19 +1,19 @@
-const height = wx.getSystemInfoSync().windowHeight;
-const app = getApp();
+const height = wx.getSystemInfoSync().windowHeight
+const app = getApp()
 Page({
   data: {
     sticky: false,
     opacity: 0,
-    height: height,
+    height,
     tabs: [],
     theme: app.globalData.theme,
   },
-  //滚动条监听
-  onPageScroll: function (e) {
+  // 滚动条监听
+  onPageScroll(e) {
     // console.log('page scroll')
   },
   onShow() {
-    
+
   },
   onReady() {
   },
@@ -45,11 +45,11 @@ Page({
       },
       {
         title: '高校大赛',
-        title2:'2020中国高校计算机大赛',
+        title2: '2020中国高校计算机大赛',
         img: 'http://mmbiz.qpic.cn/mmbiz_jpg/TcDuyasB5T3Eg34AYwjMw7xbEK2n01ekiaicPiaMInEMTkOQtuv1yke5KziaYF4MLia4IAbxlm0m5NxkibicFg4IZ92EA/0?wx_fmt=jpeg',
         desc: '微信小程序应用开发赛',
       },
     ]
-    this.setData({ tabs })
+    this.setData({tabs})
   }
 })

@@ -1,14 +1,14 @@
 const order = ['demo1', 'demo2', 'demo3']
 
 Page({
- 
+
   onLoad() {
     this.animate('#scroll-sample-object1', [{
       borderRadius: '0',
       offset: 0,
     }, {
       borderRadius: '25%',
-      offset: .5,
+      offset: 0.5,
     }, {
       borderRadius: '50%',
       offset: 1
@@ -23,10 +23,10 @@ Page({
       opacity: 1,
       offset: 0,
     }, {
-      opacity: .5,
-      offset: .5,
+      opacity: 0.5,
+      offset: 0.5,
     }, {
-      opacity: .3,
+      opacity: 0.3,
       offset: 1
     }], 2000, {
       scrollSource: '#scroll-view_D',
@@ -36,10 +36,10 @@ Page({
     })
 
     this.animate('#scroll-sample-object3', [{
-      background: "white",
+      background: 'white',
       offset: 0,
     }, {
-      background: "yellow",
+      background: 'yellow',
       offset: 1
     }], 2000, {
       scrollSource: '#scroll-view_D',

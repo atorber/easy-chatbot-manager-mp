@@ -48,7 +48,6 @@ Page({
             showCancel: false
           })
           wx.onBluetoothAdapterStateChange(function (res) {
-
             if (res && res.available) {
               this.startBluetoothDevicesDiscovery()
             }
@@ -162,7 +161,7 @@ Page({
       serviceId,
       success: (res) => {
         console.log('getBLEDeviceCharacteristics success', res.characteristics)
-        
+
         for (let i = 0; i < res.characteristics.length; i++) {
           const item = res.characteristics[i]
           if (item.properties.read) {
@@ -240,7 +239,6 @@ Page({
       },
       complete() {
         console.log('writeBLECharacteristicValue: 结束')
-
       }
     })
   },

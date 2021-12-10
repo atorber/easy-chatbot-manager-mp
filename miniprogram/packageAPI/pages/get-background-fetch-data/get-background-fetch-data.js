@@ -8,7 +8,7 @@ Page({
   },
   onShow() {
     // 获取缓存的周期性更新数据
-    this.getBackgroundFetchData();
+    this.getBackgroundFetchData()
   },
   data: {
     openid: '',
@@ -17,14 +17,14 @@ Page({
   },
   getBackgroundFetchData() {
     console.log('读取周期性更新数据')
-    const that = this;
+    const that = this
     if (wx.getBackgroundFetchData) {
       wx.getBackgroundFetchData({
         // 当type = 'periodic' 微信客户端会每隔 12 小时向服务器请求一次数据。
         fetchType: 'periodic',
         success(res) {
           console.log(res)
-          const { fetchedData } = res;
+          const {fetchedData} = res
           const result = JSON.parse(fetchedData)
           that.setData({
             appid: result.appid,

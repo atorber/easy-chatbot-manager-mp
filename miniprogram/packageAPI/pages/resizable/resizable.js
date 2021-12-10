@@ -9,7 +9,7 @@ Page({
   data: {
     status: 'lock',
   },
-  handleStatusChange: function(e) {
+  handleStatusChange(e) {
     this.setData({
       status: e.currentTarget.dataset.status,
     })

@@ -7,22 +7,22 @@ const characteristicId = '8667556C-9A37-4C91-84ED-54EE27D90049'
 
 // ArrayBuffer转16进制字符串示例
 function ab2hex(buffer) {
-  let hexArr = Array.prototype.map.call(
+  const hexArr = Array.prototype.map.call(
     new Uint8Array(buffer),
     function (bit) {
       return ('00' + bit.toString(16)).slice(-2)
     }
   )
-  return hexArr.join('');
+  return hexArr.join('')
 }
 
 function inArray(arr, key, val) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i][key] === val) {
-      return i;
+      return i
     }
   }
-  return -1;
+  return -1
 }
 
 // slave/slave.js
@@ -38,7 +38,7 @@ Page({
     servers: []
   },
 
-  onLoad: function (options) {
+  onLoad(options) {
     wx.onBLEPeripheralConnectionStateChanged(res => {
       console.log('connect')
       const connects = this.data.connects
@@ -48,7 +48,7 @@ Page({
       } else {
         connects.push(res)
       }
-      this.setData({ connects })
+      this.setData({connects})
     })
   },
 
@@ -61,10 +61,10 @@ Page({
         this.createBLEPeripheralServer()
       },
       fail: (res) => {
-        console.log(res);
+        console.log(res)
         wx.showToast({
           title: `创建失败 错误码: ${res.errCode}`,
-          icon:'none'
+          icon: 'none'
         })
         if (res.errCode === 10001) {
           wx.onBluetoothAdapterStateChange(function (res) {
@@ -91,7 +91,7 @@ Page({
         title: '创建 server ',
       })
       this.server.onCharacteristicReadRequest(res => {
-        const { serviceId, characteristicId, callbackId } = res
+        const {serviceId, characteristicId, callbackId} = res
         const buffer = new ArrayBuffer(1)
         const dataView = new DataView(buffer)
         const newValue = Math.ceil(Math.random() * 10)
@@ -108,7 +108,9 @@ Page({
       // 监听收到数据
       this.server.onCharacteristicWriteRequest(res => {
         console.log('onCharacteristicWriteRequest', res)
-        const { serviceId, characteristicId, value, callbackId } = res
+        const {
+          serviceId, characteristicId, value, callbackId
+        } = res
         wx.showToast({
           title: '收到主机数据'
         })
@@ -129,7 +131,7 @@ Page({
     })
   },
   chaneMode() {
-    wx.navigateBack();
+    wx.navigateBack()
   },
   onConfirm(e) {
     console.log('onConfirm')
@@ -138,8 +140,8 @@ Page({
     const dataView = new DataView(buffer)
     dataView.setUint8(0, n)
     this.server.writeCharacteristicValue({
-      serviceId: serviceId,
-      characteristicId: characteristicId,
+      serviceId,
+      characteristicId,
       value: buffer,
       needNotify: true
     })
@@ -195,8 +197,8 @@ Page({
       wx.showToast({
         title: '创建服务',
       })
-    },(rej) => { 
-      console.log(rej);
+    }, (rej) => {
+      console.log(rej)
       if (rej.errCode === 10001) {
         wx.showToast({
           title: '请打开蓝牙',
@@ -211,7 +213,7 @@ Page({
   },
   removeService() {
     this.server.removeService({
-      serviceId: serviceId
+      serviceId
     }).then(res => {
       wx.showToast({
         title: '关闭服务',
@@ -256,7 +258,7 @@ Page({
     wx.closeBluetoothAdapter()
   },
 
-  onUnload: function () {
+  onUnload() {
     this.data.servers.forEach(server => {
       // server.close()
     })

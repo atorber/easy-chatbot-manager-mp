@@ -19,5 +19,4 @@ Page({
   //     path: 'page/component/pages/video/video'
   //   }
   // },
-});
-
+})

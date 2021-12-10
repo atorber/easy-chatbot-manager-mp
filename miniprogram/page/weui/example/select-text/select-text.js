@@ -30,7 +30,7 @@ CustomPage({
   onCopy(e) {
     console.log('onCopy', e)
   },
-  
+
   handleTouchStart(e) {
     console.log('@@ touchstart', e)
   },

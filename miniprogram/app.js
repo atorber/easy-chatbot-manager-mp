@@ -1,10 +1,11 @@
 const config = require('./config')
+
 const themeListeners = []
 global.isDemo = true
 App({
-  
+
   onLaunch(opts, data) {
-    const that = this;
+    const that = this
     const canIUseSetBackgroundFetchToken = wx.canIUse('setBackgroundFetchToken')
     if (canIUseSetBackgroundFetchToken) {
       wx.setBackgroundFetchToken({
@@ -15,7 +16,7 @@ App({
       wx.getBackgroundFetchData({
         fetchType: 'pre',
         success(res) {
-          that.globalData.backgroundFetchData  = res;
+          that.globalData.backgroundFetchData = res
           console.log('读取预拉取数据成功')
         },
         fail() {
@@ -46,7 +47,7 @@ App({
     }
   },
 
-  
+
   onShow(opts) {
     console.log('App Show', opts)
     // console.log(wx.getSystemInfoSync())
@@ -54,22 +55,22 @@ App({
   onHide() {
     console.log('App Hide')
   },
-  onThemeChange({ theme }) {
+  onThemeChange({theme}) {
     this.globalData.theme = theme
     themeListeners.forEach((listener) => {
-        listener(theme)
+      listener(theme)
     })
   },
   watchThemeChange(listener) {
-      if (themeListeners.indexOf(listener) < 0) {
-          themeListeners.push(listener)
-      }
+    if (themeListeners.indexOf(listener) < 0) {
+      themeListeners.push(listener)
+    }
   },
   unWatchThemeChange(listener) {
-      const index = themeListeners.indexOf(listener)
-      if (index > -1) {
-          themeListeners.splice(index, 1)
-      }
+    const index = themeListeners.indexOf(listener)
+    if (index > -1) {
+      themeListeners.splice(index, 1)
+    }
   },
   globalData: {
     theme: wx.getSystemInfoSync().theme,

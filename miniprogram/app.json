@@ -230,8 +230,8 @@
       },
       {
         "pagePath": "page/explore/index",
-        "iconPath": "@iconPathComponent",
-        "selectedIconPath": "@selectedIconPathComponent",
+        "iconPath": "@iconPathE",
+        "selectedIconPath": "@selectedIconPathE",
         "text": "发现"
       },
       {
@@ -248,9 +248,6 @@
     "uploadFile": 10000,
     "downloadFile": 10000
   },
-  "navigateToMiniProgramAppIdList": [
-    "wx4f1b24bdc99fa23b"
-  ],
   "workers": "workers",
   "debug": false,
   "style": "v2",

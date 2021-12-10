@@ -85,13 +85,13 @@ Page({
     })
 
     if (wx.onThemeChange) {
-      wx.onThemeChange(({ theme }) => {
-        this.setData({ theme })
+      wx.onThemeChange(({theme}) => {
+        this.setData({theme})
       })
     }
   },
   kindToggle(e) {
-    const id = e.currentTarget.id; 
+    const id = e.currentTarget.id
     const list = this.data.list
     console.log(id, list)
     for (let i = 0, len = list.length; i < len; ++i) {

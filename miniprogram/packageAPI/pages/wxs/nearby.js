@@ -27,9 +27,9 @@ Page({
     interval: 3000,
     duration: 500,
     left: 0,
-    windowWidth: windowWidth
+    windowWidth
   },
-  changeIndicatorDots: function (e) {
+  changeIndicatorDots(e) {
     this.setData({
       indicatorDots: !this.data.indicatorDots
     })
@@ -42,17 +42,17 @@ Page({
   },
   onReady() {
   },
-  changeAutoplay: function (e) {
+  changeAutoplay(e) {
     this.setData({
       autoplay: !this.data.autoplay
     })
   },
-  intervalChange: function (e) {
+  intervalChange(e) {
     this.setData({
       interval: e.detail.value
     })
   },
-  durationChange: function (e) {
+  durationChange(e) {
     this.setData({
       duration: e.detail.value
     })

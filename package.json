@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "WeChat miniprogram demo",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -17,13 +17,15 @@
   },
   "homepage": "https://github.com/wechat-miniprogram/miniprogram-demo#readme",
   "devDependencies": {
-    "eslint": "^5.5.0",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.0"
   },
   "dependencies": {
+    "-": "^0.0.1",
+    "g": "^2.0.1",
     "miniprogram-barrage": "^1.1.0",
     "miniprogram-recycle-view": "^0.1.5",
     "wxml-to-canvas": "^1.1.1"

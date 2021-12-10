@@ -9,7 +9,7 @@ Page({
 
   startAuth(e) {
     console.log(e)
-    const AUTH_MODE = e.currentTarget.dataset.mode;
+    const AUTH_MODE = e.currentTarget.dataset.mode
     console.log(AUTH_MODE)
     const startSoterAuthentication = () => {
       wx.startSoterAuthentication({

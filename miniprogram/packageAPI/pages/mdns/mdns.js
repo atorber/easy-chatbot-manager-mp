@@ -1,6 +1,6 @@
 // miniprogram/page/API/pages/mdns/mdns.js
-let serviceList = [];
-let resolveFailList = [];
+let serviceList = []
+let resolveFailList = []
 Page({
   onShareAppMessage() {
     return {
@@ -13,14 +13,14 @@ Page({
     resolveFailList: [],
   },
   onShow() {
-    this.onLocalService();
+    this.onLocalService()
   },
-  
+
   startDiscovery() {
     wx.startLocalServiceDiscovery({
       serviceType: '_http._tcp.',
-      success: function(res) {
-        console.log(res);
+      success(res) {
+        console.log(res)
         wx.showToast({
           title: '开启成功',
           icon: 'none',
@@ -40,9 +40,9 @@ Page({
       }
     })
   },
- 
+
   stopDiscovery() {
-    const that = this;
+    const that = this
     wx.stopLocalServiceDiscovery({
       success: (res) => {
         wx.showToast({
@@ -50,8 +50,8 @@ Page({
           icon: 'none',
           duration: 2000
         })
-        serviceList = [];
-        resolveFailList = [];
+        serviceList = []
+        resolveFailList = []
         that.setData({
           serviceList: [],
           resolveFailList: []
@@ -74,40 +74,39 @@ Page({
 
   // 监听列表
   onLocalService() {
-    let that = this
+    const that = this
 
     // 监听服务发现事件
-    wx.onLocalServiceFound(function(obj) {
+    wx.onLocalServiceFound(function (obj) {
       console.log(obj)
-      serviceList.push(obj);
+      serviceList.push(obj)
 
       that.setData({
-        serviceList: serviceList,
+        serviceList,
       })
     })
 
     // 监听服务解析失败事件
-    wx.onLocalServiceResolveFail(function(obj) {
+    wx.onLocalServiceResolveFail(function (obj) {
       console.log(obj)
       resolveFailList.push(obj)
       that.setData({
-        resolveFailList: resolveFailList
+        resolveFailList
       })
     })
 
     // 监听服务离开
-    wx.onLocalServiceLost(function(obj) {
+    wx.onLocalServiceLost(function (obj) {
       console.log(obj)
     })
 
     // 监听搜索停止
-    wx.onLocalServiceDiscoveryStop(function(obj) {
+    wx.onLocalServiceDiscoveryStop(function (obj) {
       console.log('监听到搜索停止事件')
     })
   },
   // 取消监听
   offLocalService() {
-
     console.log('是否执行此部分数据')
     // 取消监听服务发现事件
     wx.offLocalServiceFound(function () {

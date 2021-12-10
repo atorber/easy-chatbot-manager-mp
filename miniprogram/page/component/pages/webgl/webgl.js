@@ -1,6 +1,6 @@
-import { compareVersion } from '../../../../util/util';
+import {compareVersion} from '../../../../util/util'
 
-//WebGL
+// WebGL
 const vs = `
   precision mediump float;
 
@@ -27,7 +27,7 @@ const triangleVertices = [
   0.0, 0.5, 1.0, 1.0, 0.0,
   -0.5, -0.5, 0.7, 0.0, 1.0,
   0.5, -0.5, 0.1, 1.0, 0.6
-];
+]
 
 Page({
   onShareAppMessage() {
@@ -40,23 +40,22 @@ Page({
     canIUse: true,
   },
   onReady() {
-    
     // 解决基础库小于 2.7.0 的兼容问题
-    const { SDKVersion } = wx.getSystemInfoSync();
-    if(compareVersion(SDKVersion, '2.7.0') < 0) {
+    const {SDKVersion} = wx.getSystemInfoSync()
+    if (compareVersion(SDKVersion, '2.7.0') < 0) {
       console.log('123')
       this.setData({
         canIUse: false,
       })
     } else {
     // WebGL
-    wx.createSelectorQuery()
-      .select('#canvasWebGL')
-      .node()
-      .exec((res) => {
-        const canvas = res[0].node
-        this.renderWebGL(canvas)
-      })
+      wx.createSelectorQuery()
+        .select('#canvasWebGL')
+        .node()
+        .exec((res) => {
+          const canvas = res[0].node
+          this.renderWebGL(canvas)
+        })
     }
   },
 

@@ -1,4 +1,5 @@
 const demoImageFileId = require('../../../config').demoImageFileId
+
 Page({
   onShareAppMessage() {
     return {

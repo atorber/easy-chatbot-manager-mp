@@ -5,7 +5,7 @@ Page({
       path: 'packageAPI/pages/audio/audio'
     }
   },
-  onReady (e) {
+  onReady(e) {
     // 使用 wx.createAudioContext 获取 audio 上下文 context
     this.audioCtx = wx.createAudioContext('myAudio')
     this.audioCtx.setSrc('https://dldir1.qq.com/music/release/upload/t_mm_file_publish/2339610.m4a')
@@ -14,16 +14,16 @@ Page({
   data: {
     src: ''
   },
-  audioPlay () {
+  audioPlay() {
     this.audioCtx.play()
   },
-  audioPause () {
+  audioPause() {
     this.audioCtx.pause()
   },
-  audio14 () {
+  audio14() {
     this.audioCtx.seek(14)
   },
-  audioStart () {
+  audioStart() {
     this.audioCtx.seek(0)
   }
 })

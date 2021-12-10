@@ -50,12 +50,12 @@ function createShader(gl, src, type) {
 const buffers = {}
 
 function createRenderer(canvas, width, height) {
-  const gl = canvas.getContext("webgl")
+  const gl = canvas.getContext('webgl')
   if (!gl) {
     console.error('Unable to get webgl context.')
     return
   }
-  
+
   const info = wx.getSystemInfoSync()
   gl.canvas.width = info.pixelRatio * width
   gl.canvas.height = info.pixelRatio * height
@@ -102,7 +102,7 @@ function createRenderer(canvas, width, height) {
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.trianglesTexCoordBuffer)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW)
 
-  const vertexTexCoordAttribute = gl.getAttribLocation(program, "aVertexTextureCoord")
+  const vertexTexCoordAttribute = gl.getAttribLocation(program, 'aVertexTextureCoord')
   gl.enableVertexAttribArray(vertexTexCoordAttribute)
   gl.vertexAttribPointer(vertexTexCoordAttribute, 2, gl.FLOAT, false, 0, 0)
 
@@ -137,7 +137,7 @@ Page({
     height: 358,
     showCanvas: false,
   },
-  
+
   onReady() {
     this.ctx = wx.createCameraContext()
     // const selector = wx.createSelectorQuery();
@@ -150,26 +150,24 @@ Page({
       this.listener.stop()
     }
     const canvas = res.node
-    const render = createRenderer(canvas, this.data.width, this.data.height);
+    const render = createRenderer(canvas, this.data.width, this.data.height)
 
     // if (!render || typeof render !== 'function') return
 
     this.listener = this.ctx.onCameraFrame((frame) => {
-
-      render(new Uint8Array(frame.data), frame.width, frame.height);
+      render(new Uint8Array(frame.data), frame.width, frame.height)
 
       const {
         frameWidth,
         frameHeight,
-      } = this.data;
+      } = this.data
 
-      if (frameWidth === frame.width && frameHeight == frame.height) return;
+      if (frameWidth === frame.width && frameHeight == frame.height) return
       this.setData({
         frameWidth: frame.width,
         frameHeight: frame.height,
-        
-      })
 
+      })
     })
     this.listener.start()
   },
@@ -211,18 +209,17 @@ Page({
   },
 
   handleShowCanvas() {
-    const that = this;
+    const that = this
 
     this.setData({
       showCanvas: !this.data.showCanvas
     }, () => {
       if (this.data.showCanvas) {
-        const selector = wx.createSelectorQuery();
+        const selector = wx.createSelectorQuery()
         selector.select('#webgl')
-        .node(this.init)
-        .exec()
+          .node(this.init)
+          .exec()
       }
     })
-    
   }
 })

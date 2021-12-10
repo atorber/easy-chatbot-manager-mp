@@ -11,7 +11,7 @@ const imgUrlList = [
 ]
 
 const newList = new Array(300).fill(0)
-let count = 0;
+let count = 0
 for (let i = 0; i < newList.length; i++) {
   newList[i] = {
     idx: i,
@@ -29,7 +29,7 @@ Page({
     }
   },
   data: {
-    
+
   },
   onLoad(options) {
 

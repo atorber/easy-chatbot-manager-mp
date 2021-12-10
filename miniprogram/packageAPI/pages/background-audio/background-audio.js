@@ -2,8 +2,8 @@ const app = getApp()
 const util = require('../../../util/util.js')
 
 
-const backgroundAudioManager = wx.getBackgroundAudioManager();
-let updateInterval;
+const backgroundAudioManager = wx.getBackgroundAudioManager()
+let updateInterval
 
 Page({
   onShareAppMessage() {
@@ -21,7 +21,7 @@ Page({
     }
   },
   onLoad() {
-    const that = this;
+    const that = this
     // 监听播放事件
     backgroundAudioManager.onPlay(() => {
       // 刷新播放时间
@@ -38,11 +38,10 @@ Page({
         playing: false,
         pause: true,
       })
-
     })
 
     backgroundAudioManager.onEnded(() => {
-      clearInterval(updateInterval);
+      clearInterval(updateInterval)
       that.setData({
         playing: false,
         playTime: 0,
@@ -51,7 +50,7 @@ Page({
     })
 
     backgroundAudioManager.onStop(() => {
-      clearInterval(updateInterval);
+      clearInterval(updateInterval)
       that.setData({
         playing: false,
         playTime: 0,
@@ -63,7 +62,7 @@ Page({
   data: {
     playing: false, // 播放状态
     pause: false,
-    playTime: 0,  // 播放时长
+    playTime: 0, // 播放时长
     formatedPlayTime: '00:00:00' // 格式化后的播放时长
   },
 
@@ -74,18 +73,18 @@ Page({
     backgroundAudioManager.coverImgUrl = 'http://y.gtimg.cn/music/photo_new/T002R300x300M000003rsKF44GyaSk.jpg?max_age=2592000'
 
     const that = this
-    if(that.data.pause) {
-      backgroundAudioManager.play();
+    if (that.data.pause) {
+      backgroundAudioManager.play()
       this.setData({
         playing: true,
-      });
+      })
     } else {
       that.setData({
         playing: true,
       }, () => {
         // 设置src后会自动播放
         backgroundAudioManager.src = 'https://dldir1.qq.com/music/release/upload/t_mm_file_publish/2339610.m4a'
-      });
+      })
     }
   },
 
@@ -95,12 +94,12 @@ Page({
 
   pause() {
     clearInterval(updateInterval)
-    backgroundAudioManager.pause();
+    backgroundAudioManager.pause()
   },
 
   stop() {
     clearInterval(updateInterval)
-    backgroundAudioManager.stop();
+    backgroundAudioManager.stop()
   },
 
   _enableInterval() {

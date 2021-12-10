@@ -33,7 +33,7 @@ const pageObject = {
       loading: !this.data.loading
     })
   },
-  
+
   handleContact(e) {
     console.log(e.detail)
   },

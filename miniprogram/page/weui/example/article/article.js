@@ -7,4 +7,4 @@ CustomPage({
       path: 'page/weui/example/article/article'
     }
   },
-});
+})

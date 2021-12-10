@@ -57,7 +57,7 @@ Page({
     })
   },
   onUnload() {
-    if(this.data.fileID) {
+    if (this.data.fileID) {
       wx.cloud.deleteFile({
         fileList: [this.data.fileID]
       })

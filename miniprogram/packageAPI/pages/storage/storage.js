@@ -52,7 +52,7 @@ Page({
       } else {
         this.setData({
           key,
-          data:storageData
+          data: storageData
         })
         wx.showModal({
           title: '读取数据成功',
@@ -78,7 +78,7 @@ Page({
       this.setData({
         key,
         data,
-      
+
       })
       wx.showModal({
         title: '存储数据成功'

@@ -41,9 +41,9 @@ Page({
               signType: 'MD5',
               paySign: data.sign,
               success: () => {
-                wx.showToast({ title: '支付成功' });
+                wx.showToast({title: '支付成功'})
               }
-            });
+            })
           },
           fail: err => {
             wx.showToast({

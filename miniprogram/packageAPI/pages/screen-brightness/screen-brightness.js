@@ -25,14 +25,14 @@ Page({
     })
     wx.setScreenBrightness({
       value,
-     
+
     })
   },
 
   _updateScreenBrightness() {
     wx.getScreenBrightness({
       success: (res) => {
-        console.log(res);
+        console.log(res)
         this.setData({
           screenBrightness: Number.parseFloat(
             res.value.toFixed(1)

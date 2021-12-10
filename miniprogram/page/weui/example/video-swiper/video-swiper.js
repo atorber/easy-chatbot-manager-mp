@@ -1,3 +1,5 @@
+import CustomPage from '../../base/CustomPage'
+
 const urls = [
 
   'https://res.wx.qq.com/wxaliveplayer/htdocs/video14e1eea.mov',
@@ -7,7 +9,6 @@ const urls = [
   'https://res.wx.qq.com/wxaliveplayer/htdocs/video54e1eeb.mov'
 
 ]
-import CustomPage from '../../base/CustomPage'
 
 CustomPage({
   onShareAppMessage() {
@@ -20,18 +21,14 @@ CustomPage({
     videoList: [],
   },
   onLoad() {
-
-    const videoList = urls.map((item, index) => {
-      return {
-        id: index, 
-        url: item,
-        objectFit: 'contain'
-      }
-    })
+    const videoList = urls.map((item, index) => ({
+      id: index,
+      url: item,
+      objectFit: 'contain'
+    }))
     this.setData({
       videoList,
     })
-    
   },
   onReady() {
 
@@ -64,4 +61,4 @@ CustomPage({
   onLoadedMetaData(e) {
     console.log('LoadedMetaData', e)
   }
-});
+})

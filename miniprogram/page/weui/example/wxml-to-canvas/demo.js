@@ -1,6 +1,5 @@
 
-const wxml = (url) => 
-`<view class="container">
+const wxml = (url) => `<view class="container">
   <image class="img" mode="aspectFit" src="${url}"></image>
   <text class="title">
     微信开放社区简介（视频）
@@ -12,7 +11,7 @@ const wxml = (url) =>
 `
 
 const style = {
-  
+
   img: {
     width: 200,
     height: 120,
@@ -34,7 +33,7 @@ const style = {
     height: 40,
     width: 200,
     color: '#4c4c4c',
-    margin:4,
+    margin: 4,
   }
 }
 

@@ -5,4 +5,4 @@ Page({
       path: 'page/weui/example/button/button'
     }
   },
-});
+})

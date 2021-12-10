@@ -179,7 +179,7 @@ Page({
           }, {
             zh: 'UDPSocket',
             url: 'udp-socket/udp-socket'
-          },{
+          }, {
             zh: 'mDNS',
             url: 'mdns/mdns'
           }
@@ -207,10 +207,10 @@ Page({
           }, {
             zh: '视频',
             url: 'video/video'
-          },{
+          }, {
             zh: '音视频合成',
             url: 'media-container/media-container'
-          },{
+          }, {
             zh: '动态加载字体',
             url: 'load-font-face/load-font-face'
           }
@@ -273,8 +273,8 @@ Page({
     })
 
     if (wx.onThemeChange) {
-      wx.onThemeChange(({ theme }) => {
-        this.setData({ theme })
+      wx.onThemeChange(({theme}) => {
+        this.setData({theme})
       })
     }
   },

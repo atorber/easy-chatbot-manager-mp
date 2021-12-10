@@ -10,10 +10,10 @@ Page({
     wx.cloud.getTempFileURL({
       fileList: [{
         fileID: 'cloud://release-j16sy.7265-release-j16sy-1258211818/开发者社区.webp',
-        maxAge: 60 * 60, 
+        maxAge: 60 * 60,
       }]
     }).then(res => {
-      console.log(res);
+      console.log(res)
       this.setData({
         webpImageUrl: res.fileList[0].tempFileURL
       })

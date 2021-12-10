@@ -1,5 +1,6 @@
 import CustomPage from '../../base/CustomPage'
-import { compareVersion } from '../../../../util/util';
+import {compareVersion} from '../../../../util/util'
+
 CustomPage({
   onShareAppMessage() {
     return {
@@ -17,7 +18,7 @@ CustomPage({
     _keyboardShow: false,
     emojiSource: 'https://res.wx.qq.com/op_res/eROMsLpnNC10dC40vzF8qviz63ic7ATlbGg20lr5pYykOwHRbLZFUhgg23RtVorX',
     // parsedComment: []
-    historyList:[],
+    historyList: [],
     layoutHeight: '0px',
     safeHeight: 0,
     keyboardHeight: 0,
@@ -26,25 +27,25 @@ CustomPage({
   },
 
   onLoad() {
-    const system = wx.getSystemInfoSync();
-    let isIOS = system.platform === 'ios';
-    
-    this.safeHeight = (system.screenHeight - system.safeArea.bottom);
-    const layoutHeight = wx.getSystemInfoSync().windowHeight - (this.safeHeight / 2);
+    const system = wx.getSystemInfoSync()
+    const isIOS = system.platform === 'ios'
+
+    this.safeHeight = (system.screenHeight - system.safeArea.bottom)
+    const layoutHeight = wx.getSystemInfoSync().windowHeight - (this.safeHeight / 2)
     this.setData({
       isIOS,
       safeHeight: this.safeHeight,
       layoutHeight,
 
-    })    
+    })
     const emojiInstance = this.selectComponent('.mp-emoji')
     this.emojiNames = emojiInstance.getEmojiNames()
-    this.parseEmoji = emojiInstance.parseEmoji;
+    this.parseEmoji = emojiInstance.parseEmoji
   },
   onReady() {
     // 解决基础库小于 2.9.2 的兼容问题
-    const { SDKVersion } = wx.getSystemInfoSync();
-    if(compareVersion(SDKVersion, '2.9.1') < 0) {
+    const {SDKVersion} = wx.getSystemInfoSync()
+    if (compareVersion(SDKVersion, '2.9.1') < 0) {
       this.setData({
         canIUse: false,
       })
@@ -68,7 +69,6 @@ CustomPage({
         keyboardHeight: height
       })
     }
-
   },
 
   hideAllPanel() {
@@ -125,7 +125,7 @@ CustomPage({
     this.setData({
       historyList: [...this.data.historyList, parsedComment],
       comment: '',
-      emojiShow:false,
+      emojiShow: false,
     })
   },
   deleteEmoji() {

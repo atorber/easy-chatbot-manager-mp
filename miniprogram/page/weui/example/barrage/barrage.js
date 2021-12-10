@@ -1,6 +1,6 @@
-const { mockData } = require('./utils')
-
 import CustomPage from '../../base/CustomPage'
+
+const {mockData} = require('./utils')
 
 CustomPage({
   onShareAppMessage() {
@@ -43,7 +43,7 @@ CustomPage({
     })
     setTimeout(() => {
       if (this.barrage) this.barrage.close()
-      this.setData({ toggle: true })
+      this.setData({toggle: true})
       this.addBarrage()
     }, 1000)
   },
@@ -51,16 +51,16 @@ CustomPage({
     this.setData({
       showBarrage: true,
     })
-    this.barrage.open();
-    const data = mockData(3);
-    this.barrage.addData(data);
+    this.barrage.open()
+    const data = mockData(3)
+    this.barrage.addData(data)
     this.timer = setInterval(() => {
-        const data = mockData(5);
-        this.barrage.addData(data);
-      }, 2000)
+      const data = mockData(5)
+      this.barrage.addData(data)
+    }, 2000)
   },
   handleCloseClick() {
-    this.barrage.close();
+    this.barrage.close()
     this.setData({
       showBarrage: false,
     })
@@ -72,15 +72,15 @@ CustomPage({
   },
   handleAddClick() {
     const data = mockData(1, [this.data.barrageValue])
-    this.barrage.addData(data);
+    this.barrage.addData(data)
     this.setData({
       barrageValue: '',
     })
   },
   handleTunnelShowClick() {
-    this.barrage.showTunnel();
+    this.barrage.showTunnel()
   },
   handleTunnelHideClick() {
     this.barrage.hideTunnel()
   }
-});
+})

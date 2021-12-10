@@ -3,7 +3,7 @@ const util = require('../../../util/util.js')
 let playTimeInterval
 let recordTimeInterval
 const recorderManager = wx.getRecorderManager()
-const innerAudioContext = wx.createInnerAudioContext();
+const innerAudioContext = wx.createInnerAudioContext()
 Page({
   onShareAppMessage() {
     return {
@@ -30,9 +30,9 @@ Page({
   },
 
   onLoad() {
-    const that = this;
+    const that = this
     // 监听录音开始事件
-    recorderManager.onStart(() => { 
+    recorderManager.onStart(() => {
       console.log('recorderManage: onStart')
       // 录音时长记录 每秒刷新
       recordTimeInterval = setInterval(() => {
@@ -42,7 +42,7 @@ Page({
           recordTime
         })
       }, 1000)
-    });
+    })
 
     // 监听录音停止事件
     recorderManager.onStop((res) => {
@@ -55,15 +55,15 @@ Page({
       })
       // 清除录音计时器
       clearInterval(recordTimeInterval)
-    });
+    })
 
     // 监听播放开始事件
     innerAudioContext.onPlay(() => {
       console.log('innerAudioContext: onPlay')
       playTimeInterval = setInterval(() => {
         const playTime = that.data.playTime + 1
-        if(that.data.playTime === that.data.recordTime) {
-          that.stopVoice();
+        if (that.data.playTime === that.data.recordTime) {
+          that.stopVoice()
         } else {
           console.log('update playTime', playTime)
           that.setData({
@@ -71,16 +71,16 @@ Page({
             playTime
           })
         }
-      }, 1000);
-    });
+      }, 1000)
+    })
 
     innerAudioContext.onStop(() => {
-      
+
     })
   },
 
   startRecord() {
-    this.setData({ 
+    this.setData({
       recording: true // 录音开始
     })
     // 设置 Recorder 参数
@@ -96,7 +96,7 @@ Page({
   },
 
   stopRecord() {
-    recorderManager.stop(); // 停止录音
+    recorderManager.stop() // 停止录音
   },
 
   stopRecordUnexpectedly() {
@@ -116,20 +116,18 @@ Page({
   },
 
   playVoice() {
-    innerAudioContext.src = this.data.tempFilePath;
+    innerAudioContext.src = this.data.tempFilePath
     this.setData({
       playing: true,
 
     }, () => {
-      innerAudioContext.play();
-
+      innerAudioContext.play()
     })
-    
   },
 
   pauseVoice() {
     clearInterval(playTimeInterval)
-    innerAudioContext.pause();
+    innerAudioContext.pause()
     this.setData({
       playing: false
     })
@@ -137,7 +135,7 @@ Page({
 
   stopVoice() {
     clearInterval(playTimeInterval)
-    innerAudioContext.stop();
+    innerAudioContext.stop()
     this.setData({
       playing: false,
       formatedPlayTime: util.formatTime(0),
@@ -147,7 +145,7 @@ Page({
 
   clear() {
     clearInterval(playTimeInterval)
-    innerAudioContext.stop();    
+    innerAudioContext.stop()
     this.setData({
       playing: false,
       hasRecord: false,
