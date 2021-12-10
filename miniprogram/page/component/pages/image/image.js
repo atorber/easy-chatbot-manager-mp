@@ -9,7 +9,7 @@ Page({
   onLoad() {
     wx.cloud.getTempFileURL({
       fileList: [{
-        fileID: 'cloud://release-b86096.7265-release-b86096-1258211818/开发者社区.webp',
+        fileID: 'cloud://release-j16sy.7265-release-j16sy-1258211818/开发者社区.webp',
         maxAge: 60 * 60, 
       }]
     }).then(res => {
@@ -22,7 +22,7 @@ Page({
     })
   },
   data: {
-    imageUrl: 'cloud://release-b86096.7265-release-b86096-1258211818/demo.jpg',
+    imageUrl: 'cloud://release-j16sy.7265-release-j16sy-1258211818/demo.jpg',
     webpImageURL: '',
   }
 })

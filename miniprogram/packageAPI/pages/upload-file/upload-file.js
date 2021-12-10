@@ -23,7 +23,7 @@ Page({
           cloudPath: 'example.png', // 上传至云端的路径
           filePath: imageSrc, // 小程序临时文件路径
           config: {
-            env: 'release-b86096'
+            env: 'release-j16sy'
           },
           success: res => {
             // 返回文件 ID

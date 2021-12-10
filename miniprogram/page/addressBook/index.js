@@ -1,6 +1,8 @@
-
-import CustomPage from '../../base/CustomPage'
-
+// page/addressBook/index.js
+import CustomPage from '../base/CustomPage'
+    const db = wx.cloud.database({
+      env: 'release-j16sy'
+    });
 CustomPage({
   onShareAppMessage() {
     return {
@@ -13,14 +15,11 @@ CustomPage({
   },
 
   getCitys() {
-    const db = wx.cloud.database({
-      env: 'release-j16sy'
-    });
     const mapCity = db.collection('mapCity');
     const _this = this
 
     mapCity.doc('6af880a55eb9574b008b78aa53a48405').get({
-      success: function(re) {
+      success: function (re) {
         console.log(re);
         const cities = re.data.cities;
         // 按拼音排序
@@ -34,15 +33,17 @@ CustomPage({
         for (const city of cities) {
           const alpha = city.pinyin[0].charAt(0).toUpperCase()
           if (!map.has(alpha)) map.set(alpha, [])
-          map.get(alpha).push({ name: city.fullname })
+          map.get(alpha).push({
+            name: city.fullname
+          })
         }
-    
+
         const keys = []
         for (const key of map.keys()) {
           keys.push(key)
         }
         keys.sort()
-    
+
         const list = []
         for (const key of keys) {
           list.push({
@@ -51,10 +52,12 @@ CustomPage({
           })
         }
 
-        _this.setData({list})
+        _this.setData({
+          list
+        })
       }
     })
-    
+
   }
 
 })

@@ -1,5 +1,6 @@
 {
   "pages": [
+    "page/index/index",
     "page/component/index",
     "page/component/pages/view/view",
     "page/component/pages/scroll-view/scroll-view",
@@ -90,8 +91,11 @@
     "page/weui/example/horizontalexpansion/horizontalexpansion",
     "page/component/pages/canvas-2d/canvas-2d",
     "page/component/pages/webgl/webgl",
-    "page/index/index",
-    "page/chat/index"
+    "page/chat/index",
+    "page/demo/index",
+    "page/addressBook/index",
+    "page/explore/index",
+    "page/userCenter/index"
   ],
   "subpackages": [
     {
@@ -202,7 +206,7 @@
   },
   "window": {
     "navigationBarTextStyle": "@navigationBarTextStyle",
-    "navigationBarTitleText": "演示",
+    "navigationBarTitleText": "mp-wechat",
     "navigationBarBackgroundColor": "@navigationBarBackgroundColor",
     "backgroundColor": "@backgroundColor"
   },
@@ -213,34 +217,28 @@
     "backgroundColor": "@tabBarBackgroundColor",
     "list": [
       {
-        "pagePath": "page/component/index",
-        "iconPath": "@iconPathComponent",
-        "selectedIconPath": "@selectedIconPathComponent",
-        "text": "组件"
-      },
-      {
-        "pagePath": "page/weui/example/index",
-        "iconPath": "@iconPathComponent",
-        "selectedIconPath": "@selectedIconPathComponent",
-        "text": "扩展能力"
-      },
-      {
-        "pagePath": "page/API/index",
-        "iconPath": "@iconPathAPI",
-        "selectedIconPath": "@selectedIconPathAPI",
-        "text": "接口"
-      },
-      {
-        "pagePath": "page/cloud/index",
-        "iconPath": "@iconPathCloud",
-        "selectedIconPath": "@selectedIconPathCloud",
-        "text": "云开发"
-      },
-      {
         "pagePath": "page/index/index",
         "iconPath": "@iconPathCloud",
         "selectedIconPath": "@selectedIconPathCloud",
         "text": "微信"
+      },
+      {
+        "pagePath": "page/addressBook/index",
+        "iconPath": "@iconPathComponent",
+        "selectedIconPath": "@selectedIconPathComponent",
+        "text": "通讯录"
+      },
+      {
+        "pagePath": "page/explore/index",
+        "iconPath": "@iconPathComponent",
+        "selectedIconPath": "@selectedIconPathComponent",
+        "text": "发现"
+      },
+      {
+        "pagePath": "page/userCenter/index",
+        "iconPath": "@iconPathAPI",
+        "selectedIconPath": "@selectedIconPathAPI",
+        "text": "我"
       }
     ]
   },

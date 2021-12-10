@@ -14,7 +14,7 @@ Page({
   onLoad() {
     this.widget = this.selectComponent('.widget')
     wx.cloud.getTempFileURL({
-      fileList: ['cloud://release-b86096.7265-release-b86096-1258211818/开放社区.jpeg'],
+      fileList: ['cloud://release-j16sy.7265-release-j16sy-1258211818/开放社区.jpeg'],
       success: res => {
 
         const url = res.fileList[0].tempFileURL

@@ -1,0 +1,24 @@
+<!--page/demo/index.wxml-->
+<view class="page" data-weui-theme="{{theme}}">
+  <view class="page__bd">
+    <mp-cells title="DEMO列表">
+      <mp-cell link url="/page/component/index" value="组件" footer="说明文字">
+        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
+        </image>
+      </mp-cell>
+      <mp-cell link url="/page/weui/example/index" value="扩展能力" footer="说明文字">
+        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
+        </image>
+      </mp-cell>
+      <mp-cell link url="/page/API/index" value="接口" footer="说明文字">
+        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
+        </image>
+      </mp-cell>
+      <mp-cell link url="/page/cloud/index" value="云开发" footer="说明文字">
+        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
+        </image>
+      </mp-cell>
+    </mp-cells>
+
+  </view>
+</view>

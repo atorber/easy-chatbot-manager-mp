@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "mp-indexList": "@miniprogram-component-plus/index-list"
+  },
+  "navigationBarTitleText": "通讯录"
+}
