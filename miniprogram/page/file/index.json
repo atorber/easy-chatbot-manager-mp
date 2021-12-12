@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "消息",
+  "navigationBarTitleText": "文档",
   "usingComponents": {
     "mp-cells": "weui-miniprogram/cells/cells",
     "mp-cell": "weui-miniprogram/cell/cell",

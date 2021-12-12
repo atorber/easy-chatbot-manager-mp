@@ -1,17 +1,17 @@
-<!--page/index/index.wxml-->
+<!--page/file/index.wxml-->
 <view class="page" data-weui-theme="{{theme}}">
   <view class="page__bd">
     <mp-cells title="">
-      <mp-cell wx:for="{{latestMsg}}" wx:for-item="item" bindtap="toHome" data-item="{{item}}">
+      <mp-cell wx:for="{{files}}" wx:for-item="item">
         <view slot="title" style="position: relative;margin-right: 10px;">
           <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
-          <mp-badge content="99+" style="position: absolute;top: -.4em;right: -.4em;" />
+          <!-- <mp-badge content="99+" style="position: absolute;top: -.4em;right: -.4em;" /> -->
         </view>
         <view>{{item.name}}</view>
         <view style="font-size: 13px;color: #888888;">{{item.text}}</view>
         <view slot="footer">
           <view style="display: inline-block;vertical-align:middle; font-size: 26rpx;">
-            <text>12:00\n在线</text>
+            <text>更多</text>
           </view>
         </view>
       </mp-cell>

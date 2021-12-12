@@ -95,7 +95,9 @@
     "page/demo/index",
     "page/addressBook/index",
     "page/explore/index",
-    "page/userCenter/index"
+    "page/userCenter/index",
+    "page/workbench/index",
+    "page/file/index"
   ],
   "subpackages": [
     {
@@ -220,7 +222,7 @@
         "pagePath": "page/index/index",
         "iconPath": "@iconPathCloud",
         "selectedIconPath": "@selectedIconPathCloud",
-        "text": "微信"
+        "text": "消息"
       },
       {
         "pagePath": "page/addressBook/index",
@@ -229,10 +231,16 @@
         "text": "通讯录"
       },
       {
-        "pagePath": "page/explore/index",
-        "iconPath": "@iconPathE",
-        "selectedIconPath": "@selectedIconPathE",
-        "text": "发现"
+        "pagePath": "page/workbench/index",
+        "iconPath": "@iconPathComponent1",
+        "selectedIconPath": "@selectedIconPathComponent1",
+        "text": "工作台"
+      },
+      {
+        "pagePath": "page/file/index",
+        "iconPath": "@iconPathCloud1",
+        "selectedIconPath": "@selectedIconPathCloud1",
+        "text": "文档"
       },
       {
         "pagePath": "page/userCenter/index",

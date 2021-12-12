@@ -1,0 +1,2 @@
+<!--page/workbench/index.wxml-->
+<mp-grids grids="{{grids}}"></mp-grids>

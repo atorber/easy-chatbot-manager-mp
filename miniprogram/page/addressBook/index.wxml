@@ -1,9 +1,19 @@
 <!--page/addressBook/index.wxml-->
 <view class="page" data-weui-theme="{{theme}}">
-  <mp-indexList class="city__list" list="{{list}}">
-    <view class="page">
-      <view class="page__bd">
-      </view>
-    </view>
+
+  <mp-tabs tabs="{{tabs}}" activeTab="{{activeTab}}" swiperClass="weui-tabs-swiper" bindtabclick="onTabClick" bindchange="onChange" activeClass="tab-bar-title__selected">
+  </mp-tabs>
+
+  <mp-indexList id="0" wx:if="{{activeTab==0}}" class="city__list" list="{{namelist}}">
+    <!-- <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" /> -->
   </mp-indexList>
+
+  <mp-indexList id="1" wx:if="{{activeTab==1}}" class="city__list" list="{{roomlist}}">
+    <!-- <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" /> -->
+  </mp-indexList>
+
+  <mp-indexList id="2" wx:if="{{activeTab==2}}" class="city__list" list="{{alllist}}">
+    <!-- <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" /> -->
+  </mp-indexList>
+
 </view>

@@ -9,12 +9,16 @@
     "tabBarBackgroundColor": "#F7F7F7",
     "iconPathComponent": "image/icon_component.png",
     "selectedIconPathComponent": "image/icon_component_HL.png",
+    "iconPathComponent1": "image/icon_component1.png",
+    "selectedIconPathComponent1": "image/icon_component_HL1.png",
     "iconPathE": "image/icon_e.png",
     "selectedIconPathE": "image/icon_e_HL.png",
     "iconPathAPI": "image/icon_API.png",
     "selectedIconPathAPI": "image/icon_API_HL.png",
     "iconPathCloud": "image/icon_cloud.png",
     "selectedIconPathCloud": "image/icon_cloud_HL.png",
+    "iconPathCloud1": "image/icon_cloud1.png",
+    "selectedIconPathCloud1": "image/icon_cloud_HL1.png",
     "backgroundTextStyle": "dark"
   },
   "dark": {
@@ -29,10 +33,14 @@
     "selectedIconPathE": "image/icon_e_HL.png",
     "iconPathComponent": "image/icon_component_dark.png",
     "selectedIconPathComponent": "image/icon_component_HL.png",
+    "iconPathComponent1": "image/icon_component1.png",
+    "selectedIconPathComponent1": "image/icon_component_HL1.png",
     "iconPathAPI": "image/icon_API_dark.png",
     "selectedIconPathAPI": "image/icon_API_HL.png",
     "iconPathCloud": "image/icon_cloud_dark.png",
     "selectedIconPathCloud": "image/icon_cloud_HL.png",
+    "iconPathCloud1": "image/icon_cloud_dark.png",
+    "selectedIconPathCloud1": "image/icon_cloud_HL1.png",
     "backgroundTextStyle": "light"
   }
 }

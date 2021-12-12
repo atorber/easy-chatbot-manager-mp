@@ -1,6 +1,10 @@
 {
+  "disableScroll": true,
   "usingComponents": {
-    "mp-indexList": "@miniprogram-component-plus/index-list"
+    "mp-indexList": "@miniprogram-component-plus/index-list",
+    "mp-tabs": "@miniprogram-component-plus/tabs",
+    "mp-cells": "weui-miniprogram/cells/cells",
+    "mp-cell": "weui-miniprogram/cell/cell"
   },
   "navigationBarTitleText": "通讯录"
 }

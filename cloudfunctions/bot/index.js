@@ -3,7 +3,9 @@ const cloud = require('wx-server-sdk')
 const rp = require('request-promise')
 const encode = require('nodejs-base64-encode');
 
-cloud.init()
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
+})
 const db = cloud.database()
 const _ = db.command
 
@@ -19,12 +21,12 @@ function unique(arr, isroom) {
   let map = {}
   let newarr = []
   for (let i = 0, len = arr.length; i < len; i++) {
-    if (!isroom && !map[arr[i].id] && arr[i].id.split(/[@,:]/).length != 2) {
-      map[arr[i].id] = arr[i].payload
+    if (!isroom && !map[arr[i].id]) {
+      map[arr[i].id] = arr[i]._payload
       newarr.push(arr[i])
     }
     if (isroom && !map[arr[i].id]) {
-      map[arr[i].id] = arr[i].payload
+      map[arr[i].id] = arr[i]._payload
       newarr.push(arr[i])
     }
   }
@@ -55,13 +57,13 @@ exports.main = async (event, context) => {
     //判断是否为base64转码过的字符串
     try {
       body = Buffer.from(body, 'base64').toString()
-      console.info(body)
+      // console.info(body)
       body = JSON.parse(body)
       if (body.rulechainId) {
         pathParameters.token = body.source.topic.split("/")[2]
         body = Buffer.from(body.message, 'base64').toString()
         body = JSON.parse(body)
-        console.info(body)
+        // console.info(body)
       }
     } catch (err) {
       console.error(err)
@@ -203,16 +205,22 @@ exports.main = async (event, context) => {
       "body": secret
     }
     return res
-  } else if (httpMethod == 'POST' && pathParameters.token) {
+  } else if (httpMethod == 'POST' && body.topic) {
+    await db.collection('log').add({
+      data: body
+    })
+    let bot_token = body.topic
+    body = JSON.parse(JSON.stringify(body.payload))
     let bot_res = await db.collection('bot').where({
-      bot_token: pathParameters.token
+      bot_token
     }).get()
     if (bot_res.data.length) {
       let bot = JSON.parse(JSON.stringify(bot_res.data[0]))
+
       if (body && body.properties) {
         let properties = body.properties
-        let contactList = bot.contactList || []
-        let roomList = bot.roomList || []
+        let contactList = []
+        let roomList = []
 
         if (properties.contactList && properties.contactList.length > 0) {
           let uniqueContact = unique(contactList.concat(properties.contactList), false)
@@ -234,6 +242,7 @@ exports.main = async (event, context) => {
           bot.timeHms = properties.timeHms
         }
         delete bot._id
+        console.info(bot)
         let update_bot = await db.collection('bot').doc(bot_res.data[0]._id).update({
           data: bot
         })
