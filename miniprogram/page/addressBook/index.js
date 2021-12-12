@@ -16,14 +16,16 @@ CustomPage({
   },
 
   getCitys() {
-    const mapCity = db.collection('contact')
+    const mapCity = db.collection('bot')
     const _this = this
 
-    mapCity.doc('6af880a55eb9574b008b').get({
+    mapCity.doc('ledongmao').get({
       success(re) {
         console.debug(re)
-        let cities = re.data
-        cities = [{
+        _this.setData({
+          bot: re.data
+        })
+        let cities = [{
           pinyin: ['da', 'shi'],
           fullname: '大师'
         }, {
@@ -40,24 +42,31 @@ CustomPage({
           fullname: 'luyuchao'
         }]
         console.debug(cities)
+        cities = re.data.contactList
+        console.debug(cities)
+
         // 按拼音排序
         cities.sort((c1, c2) => {
-          console.debug(c1)
-          const pinyin1 = c1.pinyin.join('')
-          const pinyin2 = c2.pinyin.join('')
-          console.debug(pinyin1.localeCompare(pinyin2))
-          return pinyin1.localeCompare(pinyin2)
+          // console.debug(c1)
+          if (c1.payload.province) {
+            const pinyin1 = c1.payload.weixin
+            const pinyin2 = c2.payload.weixin
+            console.debug(pinyin1.localeCompare(pinyin2))
+            return pinyin1.localeCompare(pinyin2)
+          } else {
+            return true
+          }
         })
         console.debug(cities)
         // 添加首字母
         const map = new Map()
         console.debug(map)
         for (const city of cities) {
-          console.debug(city)
-          const alpha = city.pinyin[0].charAt(0).toUpperCase()
+          // console.debug(city)
+          const alpha = city.payload.weixin.charAt(0).toUpperCase()
           if (!map.has(alpha)) map.set(alpha, [])
           map.get(alpha).push({
-            name: city.fullname
+            name: city.payload.name
           })
         }
 
