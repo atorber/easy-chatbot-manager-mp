@@ -8,9 +8,55 @@ const db = wx.cloud.database({
 })
 CustomPage({
   data: {
+    namelist: [{
+      alpha: 'C',
+      subItems: [{
+        name: '超哥',
+        pinyin: 'chaoge',
+        member: {}
+      }]
+    }, {
+      alpha: 'C',
+      subItems: [{
+        name: '大师',
+        pinyin: 'dashi',
+        member: {}
+      }]
+    }, {
+      alpha: 'Z',
+      subItems: [{
+        name: '张三',
+        pinyin: 'zhangsan',
+        member: {}
+      }]
+    }, ],
+    bot: {
+      contactList: [],
+      concat: {},
+      roomlist: [{
+        id: '123',
+        _payload: {
+          topic: 'UI交流群'
+        }
+      }]
+    },
+    alllist: [{
+      alpha: 'A',
+      subItems: [{
+        name: '张三',
+        pinyin: 'zhangsan',
+        member: {}
+      }]
+    }, {
+      alpha: 'U',
+      subItems: [{
+        name: 'UI交流群',
+        pinyin: 'ui',
+        member: {}
+      }]
+    }],
     activeTab: 0,
-    tabs: [
-      {
+    tabs: [{
         title: '联系人',
         title2: '小程序开发进阶',
         img: 'http://mmbiz.qpic.cn/sz_mmbiz_jpg/GEWVeJPFkSEV5QjxLDJaL6ibHLSZ02TIcve0ocPXrdTVqGGbqAmh5Mw9V7504dlEiatSvnyibibHCrVQO2GEYsJicPA/0?wx_fmt=jpeg',
@@ -33,15 +79,15 @@ CustomPage({
   onTabClick(e) {
     let that = this
     const index = e.detail.index
-    if(index==1){
+    if (index == 1) {
       this.setData({
         roomlist: that.pinyinSort(that.data.bot.roomList)
       })
     }
-    if(index==2){
+    if (index == 2) {
       this.setData({
         alllist: that.pinyinSort(that.data.bot.roomList.concat(that.data.bot.contactList))
-      }) 
+      })
     }
     this.setData({
       activeTab: index
@@ -60,11 +106,11 @@ CustomPage({
     var pinyinArray = new Array()
     for (var bukn = 0; bukn < name.length; bukn++) {
       var o = new Object()
-      var ken = Pinyin.getSpell(name[bukn]._payload.alias || name[bukn]._payload.name|| name[bukn]._payload.topic || name[bukn]._payload.id, function (charactor, spell) {
+      var ken = Pinyin.getSpell(name[bukn]._payload.alias || name[bukn]._payload.name || name[bukn]._payload.topic || name[bukn]._payload.id, function (charactor, spell) {
         console.log(charactor, spell);
         return spell[1];
       });
-      o.name = name[bukn]._payload.alias || name[bukn]._payload.name|| name[bukn]._payload.topic || name[bukn]._payload.id
+      o.name = name[bukn]._payload.alias || name[bukn]._payload.name || name[bukn]._payload.topic || name[bukn]._payload.id
       o.pinyin = ken.split(',').join('')
       o.member = name[bukn]
       pinyinArray.push(o)

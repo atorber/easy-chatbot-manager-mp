@@ -8,14 +8,14 @@ Page({
     files: {
       "1": {
         name: '待办事项清单.docx',
-        text: '群聊：超哥和他的小伙伴',
+        text: '群聊:超哥和他的小伙伴',
         image: '',
         ts: 0
       },
 
       "2": {
         name: '快速了解云文档.pdf',
-        text: '会话：超哥',
+        text: '会话:超哥',
         image: '',
         ts: 0
       }
