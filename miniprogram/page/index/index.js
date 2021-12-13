@@ -14,7 +14,7 @@ const DeviceSecret = 'sIQmoZzHwRYLfEUL'
 
 const userName = IoTCoreId + '/' + DeviceKey
 const password = DeviceSecret
-const clientid = DeviceKey
+const clientid = "DeviceKey"
 const host = `${IoTCoreId}.iot.gz.baidubce.com`
 const events_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/events`
 const msg_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/msg`
@@ -25,6 +25,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    latestMsgArr: ['@@b2f90bc806362ff1f6e5fa29953c89da4bea78c4a3265926b592afb5a07dec5f', '1', '2'],
     latestMsg: {
       "1": {
         name: '大师',
@@ -32,7 +33,6 @@ Page({
         image: '',
         ts: 0
       },
-
       "2": {
         name: '超哥',
         text: '在吗在啊在啊',
@@ -83,7 +83,7 @@ Page({
     }
 
     var useSSL = true
-    var cleanSession = false
+    var cleanSession = true
     var keepAliveInterval = 60
     var timeout = 30
     var port = 443
@@ -262,17 +262,34 @@ Page({
     var that = this
     var time_text = new Date().toUTCString()
     let latestMsg = that.data.latestMsg
+    let latestMsgArr = that.data.latestMsgArr || []
     let payload = JSON.parse(e.payloadString)
-    let msg = payload.events.message
-    latestMsg[msg.room.id || msg.talker.id] = msg
-    // latestMsg[msg.room.id || msg.talker.id].text = msg.text.slice(0, 18)
-    this.setData({
-      latestMsg
-    })
-    wx.setStorage({
-      key: "latestMsg",
-      data: latestMsg
-    })
+    if (payload.events && payload.events.message) {
+      let msg = payload.events.message
+      let id = msg.room.id || msg.talker.id
+      latestMsg[id] = msg
+      let index = latestMsgArr.indexOf(id)
+      if (index != -1) {
+        latestMsgArr.splice(index, 1)
+      }
+      latestMsgArr.unshift(id)
+      // latestMsg[msg.room.id || msg.talker.id].text = msg.text.slice(0, 18)
+      this.setData({
+        latestMsg,
+        latestMsgArr
+      })
+      wx.setStorage({
+        key: "latestMsg",
+        data: latestMsg
+      })
+      wx.setStorage({
+        key: "latestMsgArr",
+        data: latestMsgArr
+      })
+    } else {
+      console.debug(payload)
+    }
+
   },
   doSubscribe: function (topic) {
     var that = this

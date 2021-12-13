@@ -2,15 +2,15 @@
 <view class="page" data-weui-theme="{{theme}}">
   <view class="page__bd">
     <mp-cells title="">
-      <mp-cell wx:for="{{latestMsg}}" wx:for-item="item" bindtap="toHome" data-item="{{item}}" wx:key="index">
+      <mp-cell wx:for="{{latestMsgArr}}" wx:key="index" bindtap="toHome" data-i="{{index}}">
         <view slot="title" style="position: relative;margin-right: 10px;">
-          <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
+          <image src="{{latestMsg[item].image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
           <mp-badge content="99+" style="position: absolute;top: -.4em;right: -.4em;" />
         </view>
-        <view class="impleName" wx:if="{{item.name}}">{{item.name}}</view>
-        <view class="impleName" wx:if="{{item.room&&item.room._payload.topic}}">{{item.room._payload.topic}}</view>
-        <view class="impleName" wx:if="{{!item.room.id&&item.talker.id}}">{{item.talker.id}}</view>
-        <view class="impleName" style="font-size: 13px;color: #888888;">{{item.text}}</view>
+        <view class="impleName" wx:if="{{latestMsg[item].name}}">{{latestMsg[item].name}}</view>
+        <view class="impleName" wx:if="{{latestMsg[item].room&&latestMsg[item].room._payload.topic}}">{{latestMsg[item].room._payload.topic}}</view>
+        <view class="impleName" wx:if="{{!latestMsg[item].room.id&&latestMsg[item].talker.id}}">{{latestMsg[item].talker.id}}</view>
+        <view class="impleName" style="font-size: 13px;color: #888888;">{{latestMsg[item].text}}</view>
         <view slot="footer">
           <view style="display: inline-block;vertical-align:middle; font-size: 26rpx;">
             <text>12:00</text>
