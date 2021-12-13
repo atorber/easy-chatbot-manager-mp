@@ -21,10 +21,10 @@ App({
         },
         fail() {
           console.log('读取预拉取数据失败')
-          wx.showToast({
-            title: '无缓存数据',
-            icon: 'none'
-          })
+          // wx.showToast({
+          //   title: '无缓存数据',
+          //   icon: 'none'
+          // })
         },
         complete() {
           console.log('结束读取')

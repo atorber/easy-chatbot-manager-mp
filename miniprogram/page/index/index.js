@@ -15,7 +15,7 @@ const DeviceSecret = 'sIQmoZzHwRYLfEUL'
 const userName = IoTCoreId + '/' + DeviceKey
 const password = DeviceSecret
 const clientid = "DeviceKey"
-const host = `${IoTCoreId}.iot.gz.baidubce.com`
+const host = 'baiduiot.iot.gz.baidubce.com'
 const events_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/events`
 const msg_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/msg`
 
@@ -25,19 +25,21 @@ Page({
    * 页面的初始数据
    */
   data: {
-    latestMsgArr: ['@@b2f90bc806362ff1f6e5fa29953c89da4bea78c4a3265926b592afb5a07dec5f', '1', '2'],
+    latestMsgArr: ['1', '2'],
     latestMsg: {
       "1": {
         name: '大师',
         text: '在吗',
         image: '',
-        ts: 0
+        ts: '21:59',
+        count: 0
       },
       "2": {
         name: '超哥',
         text: '在吗在啊在啊',
         image: '',
-        ts: 0
+        ts: '16:45\n昨天',
+        count: 5
       }
     }
   },
@@ -56,11 +58,24 @@ Page({
       icon20: base64.icon20,
       icon60: base64.icon60
     })
-    this.doConnect()
+    wx.cloud.callFunction({
+      name: 'login',
+      data: {},
+      success: res => {
+        // console.debug(res)
+        that.setData({
+          user: res.result
+        }, res => {
+          if (that.data.user.openid == '"oG5zq0EgLNPu2uFbej7rn1Mdonko"') {
+            this.doConnect()
+          }
+        })
+      }
+    })
     wx.getStorage({
       key: 'latestMsg',
       success(res) {
-        console.log(res.data)
+        // console.log(res.data)
         that.setData({
           latestMsg: res.data
         })
