@@ -14,7 +14,7 @@ const DeviceSecret = 'sIQmoZzHwRYLfEUL'
 
 const userName = IoTCoreId + '/' + DeviceKey
 const password = DeviceSecret
-const clientid = 'DeviceKey'
+const clientid = DeviceKey
 const host = `${IoTCoreId}.iot.gz.baidubce.com`
 const events_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/events`
 const msg_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/msg`
@@ -51,11 +51,21 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    let that = this
     this.setData({
       icon20: base64.icon20,
       icon60: base64.icon60
     })
     this.doConnect()
+    wx.getStorage({
+      key: 'latestMsg',
+      success(res) {
+        console.log(res.data)
+        that.setData({
+          latestMsg: res.data
+        })
+      }
+    })
   },
 
   doConnect: function () {
@@ -73,7 +83,7 @@ Page({
     }
 
     var useSSL = true
-    var cleanSession = true
+    var cleanSession = false
     var keepAliveInterval = 60
     var timeout = 30
     var port = 443
@@ -254,16 +264,20 @@ Page({
     let latestMsg = that.data.latestMsg
     let payload = JSON.parse(e.payloadString)
     let msg = payload.events.message
-    latestMsg[msg.room.id||msg.talker.id] = msg
-    latestMsg[msg.room.id||msg.talker.id].text = msg.text.slice(0,18)
+    latestMsg[msg.room.id || msg.talker.id] = msg
+    // latestMsg[msg.room.id || msg.talker.id].text = msg.text.slice(0, 18)
     this.setData({
       latestMsg
+    })
+    wx.setStorage({
+      key: "latestMsg",
+      data: latestMsg
     })
   },
   doSubscribe: function (topic) {
     var that = this
     this.subscribe(topic, {
-      qos:0
+      qos: 0
     })
   },
   doPublish: function () {

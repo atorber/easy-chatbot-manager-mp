@@ -52,4 +52,14 @@
     background-color: var(--weui-BG-2) !important;
     color: var(--weui-FG-0) !important;
 }
+.impleName {
+    max-width: 60%;
+    /*最大宽度为当前元素的100%*/
+    white-space: nowrap;
+    /*保证文本内容不会自动换行，如果多余的内容会在水平方向撑破单元格*/
+    overflow: hidden;
+    /*隐藏超出单元格的部分*/
+    text-overflow: ellipsis;
+    /*将被隐藏的那部分用省略号代替*/
+}
 

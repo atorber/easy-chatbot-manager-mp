@@ -7,13 +7,13 @@
           <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
           <mp-badge content="99+" style="position: absolute;top: -.4em;right: -.4em;" />
         </view>
-        <view wx:if="{{item.name}}">{{item.name}}</view>
-        <view wx:if="{{item.room&&item.room._payload.topic}}">{{item.room._payload.topic}}</view>
-        <view wx:if="{{!item.room&&item.talker.id}}">{{item.room._payload.topic}}</view>
-        <view style="font-size: 13px;color: #888888;">{{item.text}}</view>
+        <view class="impleName" wx:if="{{item.name}}">{{item.name}}</view>
+        <view class="impleName" wx:if="{{item.room&&item.room._payload.topic}}">{{item.room._payload.topic}}</view>
+        <view class="impleName" wx:if="{{!item.room.id&&item.talker.id}}">{{item.talker.id}}</view>
+        <view class="impleName" style="font-size: 13px;color: #888888;">{{item.text}}</view>
         <view slot="footer">
           <view style="display: inline-block;vertical-align:middle; font-size: 26rpx;">
-            <text>12:00\n在线</text>
+            <text>12:00</text>
           </view>
         </view>
       </mp-cell>
