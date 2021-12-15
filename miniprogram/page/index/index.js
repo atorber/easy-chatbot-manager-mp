@@ -372,7 +372,7 @@ Page({
       "timestamp": new Date().getTime(),
       "name": "send",
       "params": {
-        toContacts: this.data.wxid,
+        toContacts: [this.data.wxid,],
         "messageType": "Text",
         messagePayload: text
       }

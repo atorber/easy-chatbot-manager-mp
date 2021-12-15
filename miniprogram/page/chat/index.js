@@ -39,7 +39,6 @@ CustomPage({
       isIOS,
       safeHeight: this.safeHeight,
       layoutHeight,
-
     })
     const emojiInstance = this.selectComponent('.mp-emoji')
     this.emojiNames = emojiInstance.getEmojiNames()
@@ -52,8 +51,9 @@ CustomPage({
     eventChannel.on('acceptDataFromOpenerPage', function (data) {
       console.log('acceptDataFromOpenerPage 2', data)
       if (data.wxid) {
+        let title = data.msg.room&&data.msg.room.id?data.msg.room._payload.topic:data.msg.talker._payload.name
         wx.setNavigationBarTitle({
-          title: data.msg.name,
+          title,
           success() {
             console.log('setNavigationBarTitle success')
           },
@@ -147,21 +147,27 @@ CustomPage({
   },
   onsend(e) {
     let that = this
-    const comment = e.text || this.data.comment
-    const parsedComment = {
-      emoji: this.parseEmoji(comment),
-      id: `emoji_${this.data.historyList.length}`,
-      msg: e.text ? e : that.data.wx.msg
+    const comment = e.text || this.data.comment||''
+    if (comment) {
+      const parsedComment = {
+        emoji: this.parseEmoji(comment),
+        id: `emoji_${this.data.historyList.length}`,
+        msg: e.text ? e : that.data.wx.msg
+      }
+      if (this.data.historyList.length != 0 && !e.messageType) {
+        const eventChannel = this.getOpenerEventChannel()
+        eventChannel.emit('acceptDataFromOpenedPage', { comment });
+      }
+      this.setData({
+        historyList: [...this.data.historyList, parsedComment],
+        comment: '',
+        emojiShow: false,
+      })
+    } else {
+      wx.showToast({
+        title: '内容为空',
+      })
     }
-    if (this.data.historyList.length != 0) {
-      const eventChannel = this.getOpenerEventChannel()
-      eventChannel.emit('acceptDataFromOpenedPage', { comment });
-    }
-    this.setData({
-      historyList: [...this.data.historyList, parsedComment],
-      comment: '',
-      emojiShow: false,
-    })
   },
   deleteEmoji() {
     const pos = this.data.cursor

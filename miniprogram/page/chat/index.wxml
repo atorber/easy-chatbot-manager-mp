@@ -6,7 +6,7 @@
         <view class="record" hidden="{{historyItem.length === 0}}" id="{{historyItem.id}}">
           <view class="avator"></view>
           <view>
-            <view style="font-size: 13px;color: #888888;">{{historyItem.msg.name}}</view>
+            <view style="font-size: 13px;color: #888888;">{{historyItem.msg.talker._payload.name||'匿名'}}</view>
             <view class="comment">
               <block wx:for="{{historyItem.emoji}}" wx:key="*this">
                 <block wx:if="{{item.type === 1}}">{{item.content}}</block>
