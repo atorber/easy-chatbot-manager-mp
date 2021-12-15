@@ -25,6 +25,8 @@ Page({
    * 页面的初始数据
    */
   data: {
+    wxid: '',
+    inter: '',
     latestMsgArr: ['1', '2'],
     latestMsg: {
       "1": {
@@ -45,8 +47,30 @@ Page({
   },
   toHome(e) {
     console.debug(e)
+    let that = this
+    let wxid = e.currentTarget.dataset.wxid
+    let msg = e.currentTarget.dataset.msg
+    that.setData({
+      wxid
+    })
     wx.navigateTo({
-      url: '/page/weui/example/emoji/emoji',
+      url: '/page/chat/index?wxid=' + wxid,
+      events: {
+        // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+        acceptDataFromOpenedPage: function (data) {
+          console.log('acceptDataFromOpenedPage', data)
+          that.doPublish(data.comment)
+        },
+        someEvent: function (data) {
+          console.log('someEvent', data)
+        }
+      },
+      success: function (res) {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('acceptDataFromOpenerPage', { msg, wxid })
+        that.eventChannel = res.eventChannel
+        // that.startInter()
+      }
     })
   },
   /**
@@ -62,15 +86,16 @@ Page({
       name: 'login',
       data: {},
       success: res => {
-        // console.debug(res)
+        console.debug(res)
         that.setData({
           user: res.result
         }, res => {
-          if (that.data.user.openid == '"oG5zq0EgLNPu2uFbej7rn1Mdonko"') {
+          if (that.data.user.openid == "oG5zq0EgLNPu2uFbej7rn1Mdonko") {
             this.doConnect()
           }
         })
-      }
+      },
+      fail: console.error
     })
     wx.getStorage({
       key: 'latestMsg',
@@ -272,6 +297,28 @@ Page({
     })
 
   },
+  /**
+ * 启动定时器
+ */
+  startInter: function () {
+    var that = this;
+    that.data.inter = setInterval(
+      function () {
+        // TODO 你需要无限循环执行的任务
+        console.log('setInterval 每过500毫秒执行一次任务')
+        if (that.eventChannel) {
+          that.eventChannel.emit('acceptDataFromOpenerPage', { data: new Date().getTime() })
+        }
+      }, 3000);
+  },
+
+  /**
+   * 结束定时器
+   */
+  endInter: function () {
+    var that = this;
+    that.clearInterval(that.data.inter)
+  },
   getmsg(e) {
     console.debug('订阅到消息', e)
     var that = this
@@ -289,6 +336,9 @@ Page({
       }
       latestMsgArr.unshift(id)
       // latestMsg[msg.room.id || msg.talker.id].text = msg.text.slice(0, 18)
+      if (that.eventChannel && id == that.data.wxid) {
+        that.eventChannel.emit('acceptDataFromOpenerPage', { msg })
+      }
       this.setData({
         latestMsg,
         latestMsgArr
@@ -312,28 +362,23 @@ Page({
       qos: 0
     })
   },
-  doPublish: function () {
+  doPublish: function (text) {
     var that = this
     var topic = msg_topic
-    var reported = {}
-    reported.userInfo = this.data.userInfo
-    reported[this.data.systemInfo.platform] = this.data.systemInfo
-
-    reported.latitude_bd = this.data.location.latitude
-    reported.longitude_bd = this.data.location.longitude
-
-    reported.latitude = this.data.latitude
-    reported.longitude = this.data.longitude
-
-    reported.location = this.data.location
-
-    var payload = {
-      "requestId": new Date().getTime(),
-      "reported": reported
+    let payload = {
+      "reqId": "442c1da4-9d3a-4f9b-a6e9-bfe858e4ac43",
+      "method": "thing.command.invoke",
+      "version": "1.0",
+      "timestamp": new Date().getTime(),
+      "name": "send",
+      "params": {
+        toContacts: this.data.wxid,
+        "messageType": "Text",
+        messagePayload: text
+      }
     }
     payload = JSON.stringify(payload)
     console.debug(payload)
-
     this.publish(topic, payload, 0, false)
   },
 
@@ -348,7 +393,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    this.setData({
+      wxid: ''
+    })
   },
 
   /**

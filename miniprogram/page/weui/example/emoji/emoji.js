@@ -26,7 +26,9 @@ CustomPage({
     canIUse: true,
   },
 
-  onLoad() {
+  onLoad(option) {
+    console.log(option.query)
+
     const system = wx.getSystemInfoSync()
     const isIOS = system.platform === 'ios'
 

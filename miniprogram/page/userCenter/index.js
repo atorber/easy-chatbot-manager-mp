@@ -9,7 +9,13 @@ Page({
   data: {
     icon: base64.icon20,
   },
-
+  noTitlemodalTap() {
+    wx.showModal({
+      content: '当前用户为超哥',
+      confirmText: '确定',
+      cancelText: '取消'
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */

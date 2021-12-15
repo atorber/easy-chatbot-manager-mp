@@ -2,7 +2,7 @@
 <view class="page" data-weui-theme="{{theme}}">
   <view class="page__bd">
     <mp-cells title="">
-      <mp-cell wx:for="{{latestMsgArr}}" wx:key="index" bindtap="toHome" data-i="{{index}}">
+      <mp-cell wx:for="{{latestMsgArr}}" wx:key="index" bindtap="toHome" data-i="{{index}}" data-wxid="{{item}}" data-msg="{{latestMsg[item]}}">
         <view slot="title" style="position: relative;margin-right: 10px;">
           <image src="{{latestMsg[item].image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
           <mp-badge wx:if="{{latestMsg[item].count>0}}" content="{{latestMsg[item].count>99?'99+':latestMsg[item].count}}" style="position: absolute;top: -.4em;right: -.4em;" />

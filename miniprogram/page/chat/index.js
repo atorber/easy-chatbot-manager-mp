@@ -1,66 +1,204 @@
 // page/chat/index.js
-Page({
+import CustomPage from '../base/CustomPage'
+import { compareVersion } from '../../util/util'
 
-  /**
-   * 页面的初始数据
-   */
-  data: {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
+CustomPage({
   onShareAppMessage() {
+    return {
+      title: 'emoji',
+      path: 'page/weui/example/emoji/emoji'
+    }
+  },
+  data: {
+    lineHeight: 24,
+    functionShow: false,
+    emojiShow: false,
+    comment: '',
+    focus: false,
+    cursor: 0,
+    _keyboardShow: false,
+    emojiSource: 'https://res.wx.qq.com/op_res/eROMsLpnNC10dC40vzF8qviz63ic7ATlbGg20lr5pYykOwHRbLZFUhgg23RtVorX',
+    // parsedComment: []
+    historyList: [],
+    layoutHeight: '0px',
+    safeHeight: 0,
+    keyboardHeight: 0,
+    isIOS: false,
+    canIUse: true,
+  },
 
+  onLoad(option) {
+    console.log(option.query)
+    let that = this
+    const system = wx.getSystemInfoSync()
+    const isIOS = system.platform === 'ios'
+
+    this.safeHeight = (system.screenHeight - system.safeArea.bottom)
+    const layoutHeight = wx.getSystemInfoSync().windowHeight - (this.safeHeight / 2)
+    this.setData({
+      isIOS,
+      safeHeight: this.safeHeight,
+      layoutHeight,
+
+    })
+    const emojiInstance = this.selectComponent('.mp-emoji')
+    this.emojiNames = emojiInstance.getEmojiNames()
+    this.parseEmoji = emojiInstance.parseEmoji
+
+    const eventChannel = this.getOpenerEventChannel()
+    // eventChannel.emit('acceptDataFromOpenedPage', { data: 'test2' });
+    eventChannel.emit('someEvent', { data: 'test2' });
+    // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
+    eventChannel.on('acceptDataFromOpenerPage', function (data) {
+      console.log('acceptDataFromOpenerPage 2', data)
+      if (data.wxid) {
+        wx.setNavigationBarTitle({
+          title: data.msg.name,
+          success() {
+            console.log('setNavigationBarTitle success')
+          },
+          fail(err) {
+            console.log('setNavigationBarTitle fail, err is', err)
+          }
+        })
+        that.setData({
+          wx: data
+        })
+      }
+      // that.update_msgs(data.msg)
+
+      that.onsend(data.msg)
+
+    })
+  },
+  onReady() {
+    // 解决基础库小于 2.9.2 的兼容问题
+    const { SDKVersion } = wx.getSystemInfoSync()
+    if (compareVersion(SDKVersion, '2.9.1') < 0) {
+      this.setData({
+        canIUse: false,
+      })
+    }
+  },
+  onkeyboardHeightChange(e) {
+    const { height } = e.detail
+    if (height === 0) {
+      this.data._keyboardShow = false
+
+      this.setData({
+        safeHeight: this.safeHeight,
+        keyboardHeight: height
+      })
+    } else {
+      this.data._keyboardShow = true
+      this.setData({
+        safeHeight: 0,
+        functionShow: false,
+        emojiShow: false,
+        keyboardHeight: height
+      })
+    }
+  },
+
+  hideAllPanel() {
+    this.setData({
+      functionShow: false,
+      emojiShow: false
+    })
+  },
+  showEmoji() {
+    this.setData({
+      functionShow: false,
+      emojiShow: this.data._keyboardShow || !this.data.emojiShow
+    })
+  },
+  showFunction() {
+    this.setData({
+      functionShow: this.data._keyboardShow || !this.data.functionShow,
+      emojiShow: false
+    })
+  },
+  chooseImage() { },
+  onFocus() {
+    this.data._keyboardShow = true
+
+    this.hideAllPanel()
+  },
+  onBlur(e) {
+    this.data._keyboardShow = false
+    this.data.cursor = e.detail.cursor || 0
+  },
+  onInput(e) {
+    const value = e.detail.value
+    this.data.comment = value
+  },
+  onConfirm() {
+    this.onsend()
+  },
+  insertEmoji(evt) {
+    const emotionName = evt.detail.emotionName
+    const { cursor, comment } = this.data
+    const newComment =
+      comment.slice(0, cursor) + emotionName + comment.slice(cursor)
+    this.setData({
+      comment: newComment,
+      cursor: cursor + emotionName.length
+    })
+  },
+  onsend(e) {
+    let that = this
+    const comment = e.text || this.data.comment
+    const parsedComment = {
+      emoji: this.parseEmoji(comment),
+      id: `emoji_${this.data.historyList.length}`,
+      msg: e.text ? e : that.data.wx.msg
+    }
+    if (this.data.historyList.length != 0) {
+      const eventChannel = this.getOpenerEventChannel()
+      eventChannel.emit('acceptDataFromOpenedPage', { comment });
+    }
+    this.setData({
+      historyList: [...this.data.historyList, parsedComment],
+      comment: '',
+      emojiShow: false,
+    })
+  },
+  deleteEmoji() {
+    const pos = this.data.cursor
+    const comment = this.data.comment
+    let result = ''
+    let cursor = 0
+
+    let emojiLen = 6
+    let startPos = pos - emojiLen
+    if (startPos < 0) {
+      startPos = 0
+      emojiLen = pos
+    }
+    const str = comment.slice(startPos, pos)
+    const matchs = str.match(/\[([\u4e00-\u9fa5\w]+)\]$/g)
+    // 删除表情
+    if (matchs) {
+      const rawName = matchs[0]
+      const left = emojiLen - rawName.length
+      if (this.emojiNames.indexOf(rawName) >= 0) {
+        const replace = str.replace(rawName, '')
+        result = comment.slice(0, startPos) + replace + comment.slice(pos)
+        cursor = startPos + left
+      }
+      // 删除字符
+    } else {
+      let endPos = pos - 1
+      if (endPos < 0) endPos = 0
+      const prefix = comment.slice(0, endPos)
+      const suffix = comment.slice(pos)
+      result = prefix + suffix
+      cursor = endPos
+    }
+    this.setData({
+      comment: result,
+      cursor
+    })
   }
 })
+

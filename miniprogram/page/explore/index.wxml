@@ -2,23 +2,23 @@
 <view class="page" data-weui-theme="{{theme}}">
   <view class="page__bd">
     <mp-cells title="">
-      <mp-cell link url="/page/demo/index" value="朋友圈" footer="">
+      <mp-cell link url="" value="友圈" footer="">
         <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
         </image>
       </mp-cell>
     </mp-cells>
-        <mp-cells title="">
-          <mp-cell link url="/page/demo/index" value="视频号" footer="">
-            <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
-            </image>
-          </mp-cell>
-        </mp-cells>
-            <mp-cells title="">
-              <mp-cell link url="/page/demo/index" value="扫一扫" footer="">
-                <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
-                </image>
-              </mp-cell>
-            </mp-cells>
+    <!-- <mp-cells title="">
+      <mp-cell link url="/page/demo/index" value="视频号" footer="">
+        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
+        </image>
+      </mp-cell>
+    </mp-cells>
+    <mp-cells title="">
+      <mp-cell link url="/page/demo/index" value="扫一扫" footer="">
+        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
+        </image>
+      </mp-cell>
+    </mp-cells>
     <mp-cells title="">
       <mp-cell link url="/page/demo/index" value="看一看" footer="">
         <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
@@ -34,7 +34,7 @@
         <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
         </image>
       </mp-cell>
-    </mp-cells>
+    </mp-cells> -->
 
   </view>
 </view>
