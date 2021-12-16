@@ -56,7 +56,13 @@ CustomPage({
       }]
     }],
     activeTab: 0,
-    tabs: [{
+    tabs: [
+      {
+        title: '全部',
+        title2: '微信小程序直播',
+        img: 'http://mmbiz.qpic.cn/sz_mmbiz_png/GEWVeJPFkSHALb0g5rCc4Jf5IqDfdwhWJ43I1IvriaV5uFr9fLAuv3uxHR7DQstbIxhNXFoQEcxGzWwzQUDBd6Q/0?wx_fmt=png',
+        desc: '微信小程序直播系列课程持续更新中，帮助大家更好地理解、应用微信小程序直播功能。',
+      },{
         title: '联系人',
         title2: '小程序开发进阶',
         img: 'http://mmbiz.qpic.cn/sz_mmbiz_jpg/GEWVeJPFkSEV5QjxLDJaL6ibHLSZ02TIcve0ocPXrdTVqGGbqAmh5Mw9V7504dlEiatSvnyibibHCrVQO2GEYsJicPA/0?wx_fmt=jpeg',
@@ -69,7 +75,7 @@ CustomPage({
         desc: '微信小程序直播系列课程持续更新中，帮助大家更好地理解、应用微信小程序直播功能。',
       },
       {
-        title: '全部',
+        title: '+分组',
         title2: '微信小程序直播',
         img: 'http://mmbiz.qpic.cn/sz_mmbiz_png/GEWVeJPFkSHALb0g5rCc4Jf5IqDfdwhWJ43I1IvriaV5uFr9fLAuv3uxHR7DQstbIxhNXFoQEcxGzWwzQUDBd6Q/0?wx_fmt=png',
         desc: '微信小程序直播系列课程持续更新中，帮助大家更好地理解、应用微信小程序直播功能。',
@@ -79,12 +85,12 @@ CustomPage({
   onTabClick(e) {
     let that = this
     const index = e.detail.index
-    if (index == 1) {
+    if (index == 2) {
       this.setData({
         roomlist: that.pinyinSort(that.data.bot.roomList)
       })
     }
-    if (index == 2) {
+    if (index == 0) {
       this.setData({
         alllist: that.pinyinSort(that.data.bot.roomList.concat(that.data.bot.contactList))
       })
@@ -154,19 +160,19 @@ CustomPage({
   },
   getCitys() {
     const mapCity = db.collection('bot')
-    const _this = this
+    const that = this
 
     mapCity.doc('0448022461b60c2f01ef65ee4b45e607').get({
       success(re) {
         console.debug(re)
-        _this.setData({
+        that.setData({
           bot: re.data
         })
         let cities = re.data.contactList || []
         console.debug(cities)
-        let namelist = _this.pinyinSort(cities)
-        _this.setData({
-          namelist
+        that.setData({
+          namelist:that.pinyinSort(cities),
+          alllist: that.pinyinSort(that.data.bot.roomList.concat(that.data.bot.contactList))
         })
       },
       fail(err) {
