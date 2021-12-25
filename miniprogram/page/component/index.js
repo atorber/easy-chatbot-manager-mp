@@ -4,7 +4,7 @@ Page({
   },
   onShareAppMessage() {
     return {
-      title: '小程序官方组件展示',
+      title: '组件展示（非官方）',
       path: 'page/component/index'
     }
   },

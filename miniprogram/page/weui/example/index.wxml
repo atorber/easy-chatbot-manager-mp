@@ -4,8 +4,8 @@
       <view class="page__desc">扩展组件是对小程序内置组件能力的补充，包括一些常见的功能组件。</view>
     </view> -->
      <view class="index-hd">
-    <image class="index-logo" src="./images/logo_extended.png"></image>
-    <view class="index-desc">以下是对小程序内置组件能力的补充，包括 WeUI 组件库和一些常见的功能组件，具体属性参数详见 <navigator url="pages/doc-web-view/doc-web-view" class="weui-agree__link">小程序开发文档</navigator>。</view>
+    <!-- <image class="index-logo" src="./images/logo_extended.png"></image> -->
+    <view class="index-desc">以下将展示小程序组件示例，，具体属性参数详见 <navigator url="pages/doc-web-view/doc-web-view" class="weui-agree__link">小程序开发文档</navigator>。</view>
   </view>
     <!-- <view class="page__hd page-weui">
       <view class="page__title">WeUI</view>
