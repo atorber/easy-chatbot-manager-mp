@@ -1,8 +1,15 @@
 // page/index/index.js
 import CustomPage from '../base/CustomPage'
 const base64 = require('../images/base64')
+const util = require('../../util/util')
+const tobase64 = require('../../util/base64')
+// 加密
+console.log(util.Encrypt('123456'))
+// 5A09AE89579945B7AB80A9DC08F66FAA
+// 解密
+console.log(util.Decrypt('5A09AE89579945B7AB80A9DC08F66FAA'))
+// 123456
 const app = getApp();
-var util = require('../../weichatPb/src/util.js');
 var protobuf = require('../../weichatPb/protobuf.js');
 app.globalData._protobuf = protobuf;
 
@@ -30,6 +37,11 @@ function test1() {
   var message = MessageMessage.create(payload);
   var buffer = MessageMessage.encode(message).finish();
   console.log("buffer", buffer);
+
+  // buffer = util.Encrypt(buffer)
+  // buffer = util.Decrypt(buffer)
+  // console.log(buffer)
+
   var deMessage = MessageMessage.decode(buffer);
   deMessage.properties = JSON.parse(deMessage.properties)
   deMessage.timestamp = Number(deMessage.timestamp)
@@ -51,6 +63,7 @@ const userName = IoTCoreId + '/' + DeviceKey
 const password = DeviceSecret
 const clientid = "DeviceKey"
 const host = 'baiduiot.iot.gz.baidubce.com'
+var port = 443
 const events_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/events`
 const msg_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/msg`
 
@@ -161,10 +174,9 @@ Page({
     var cleanSession = true
     var keepAliveInterval = 60
     var timeout = 30
-    var port = 443
     var reconnect = false
 
-    if (!(host && clientid && password && userName && port)) {
+    if (!(host && clientid && port)) {
       wx.showToast({
         title: '有必填项为空',
       })
@@ -362,8 +374,13 @@ Page({
     let latestMsgArr = that.data.latestMsgArr || []
     console.debug(e.payloadBytes)
     let payload = MessageMessage.decode(e.payloadBytes);
-    console.debug(payload)
-    payload.events = JSON.parse(payload.events)
+    // console.debug(payload)
+    if (payload.events) {
+      payload.events = JSON.parse(payload.events)
+    }
+    if (payload.properties) {
+      payload.properties = JSON.parse(payload.properties)
+    }
     payload.timestamp = Number(payload.timestamp)
 
     // let payload = JSON.parse(e.payloadString)
@@ -392,8 +409,23 @@ Page({
         key: "latestMsgArr",
         data: latestMsgArr
       })
-    } else {
-      console.debug(payload)
+    }
+
+    if (payload.properties) {
+      let bot = {}
+      try {
+        var old_bot = wx.getStorageSync('bot')
+        if (old_bot) {
+          bot = old_bot
+        }
+      } catch (e) {
+        // Do something when catch error
+      }
+      Object.assign(bot, payload.properties);
+      wx.setStorage({
+        key: "bot",
+        data: bot
+      })
     }
 
   },
