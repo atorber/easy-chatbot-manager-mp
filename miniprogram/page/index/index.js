@@ -1,7 +1,42 @@
 // page/index/index.js
 import CustomPage from '../base/CustomPage'
-
 const base64 = require('../images/base64')
+const app = getApp();
+var util = require('../../weichatPb/src/util.js');
+var protobuf = require('../../weichatPb/protobuf.js');
+app.globalData._protobuf = protobuf;
+
+var messageConfig = require('./message');
+var MessageRoot = protobuf.Root.fromJSON(messageConfig);
+var MessageMessage = MessageRoot.lookupType("Message");
+
+function test1() {
+  let properties = {
+    "sn": "ABC0000001",
+    "firmware_version": 1.2,
+    "location": { "latitude": 80.001, "longitude": 120.1 },
+  }
+  let cur_time = new Date().getTime()
+  properties = JSON.stringify(properties)
+  var payload = {
+    "reqId": 'xxxxxxxxxxx',
+    "method": "thing.property.post",
+    "version": "1.0",
+    "timestamp": String(cur_time),
+    "timeHms": "2021-12-1",
+    "properties": properties
+  }
+  console.debug(payload)
+  var message = MessageMessage.create(payload);
+  var buffer = MessageMessage.encode(message).finish();
+  console.log("buffer", buffer);
+  var deMessage = MessageMessage.decode(buffer);
+  deMessage.properties = JSON.parse(deMessage.properties)
+  deMessage.timestamp = Number(deMessage.timestamp)
+  console.log("deMessage", deMessage);
+}
+
+test1()
 
 var {
   Client,
@@ -325,7 +360,13 @@ Page({
     var time_text = new Date().toUTCString()
     let latestMsg = that.data.latestMsg
     let latestMsgArr = that.data.latestMsgArr || []
-    let payload = JSON.parse(e.payloadString)
+    console.debug(e.payloadBytes)
+    let payload = MessageMessage.decode(e.payloadBytes);
+    console.debug(payload)
+    payload.events = JSON.parse(payload.events)
+    payload.timestamp = Number(payload.timestamp)
+
+    // let payload = JSON.parse(e.payloadString)
     if (payload.events && payload.events.message) {
       let msg = payload.events.message
       let id = msg.room.id || msg.talker.id
@@ -377,7 +418,11 @@ Page({
         messagePayload: text
       }
     }
-    payload = JSON.stringify(payload)
+    // payload = JSON.stringify(payload)
+    payload.params = JSON.stringify(payload.params)
+    payload.timestamp = String(payload.timestamp)
+    var message = MessageMessage.create(payload);
+    payload = MessageMessage.encode(message).finish();
     console.debug(payload)
     this.publish(topic, payload, 0, false)
   },
