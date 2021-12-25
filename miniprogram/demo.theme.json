@@ -17,8 +17,8 @@
     "selectedIconPathAPI": "image/icon_API_HL.png",
     "iconPathCloud": "image/icon_cloud.png",
     "selectedIconPathCloud": "image/icon_cloud_HL.png",
-    "iconPathCloud1": "image/icon_cloud1.png",
-    "selectedIconPathCloud1": "image/icon_cloud_HL1.png",
+    "iconPathCloud1": "image/icon_e.png",
+    "selectedIconPathCloud1": "image/icon_e_HL.png",
     "backgroundTextStyle": "dark"
   },
   "dark": {

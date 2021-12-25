@@ -40,15 +40,9 @@
         </image>
       </mp-cell>
     </mp-cells> -->
-    <mp-cells title="">
-      <mp-cell link url="" value="设置" footer="">
-        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
-        </image>
-      </mp-cell>
-    </mp-cells>
 
     <mp-cells title="">
-      <mp-cell link url="/page/explore/index" value="发现" footer="">
+      <mp-cell link url="/page/explore/index" value="设置" footer="">
         <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
         </image>
       </mp-cell>

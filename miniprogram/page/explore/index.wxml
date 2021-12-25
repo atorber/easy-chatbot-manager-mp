@@ -2,7 +2,7 @@
 <view class="page" data-weui-theme="{{theme}}">
   <view class="page__bd">
     <mp-cells title="">
-      <mp-cell link url="" value="友圈" footer="">
+      <mp-cell link url="" value="一些菜单" footer="">
         <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
         </image>
       </mp-cell>
