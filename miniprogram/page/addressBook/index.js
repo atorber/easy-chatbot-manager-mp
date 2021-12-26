@@ -1,78 +1,14 @@
 // page/addressBook/index.js
 import CustomPage from '../base/CustomPage'
 import Pinyin from '..//../util/pinyin'
+import { filename } from '../../weichatPb/src/parse'
+const app = getApp()
+const db = wx.cloud.database()
+const _ = db.command
 
-let header = {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer uskv0Tuj5MxADtcsI1C0Vkh'
-}
-
-wx.request({
-  method: 'GET',
-  url: 'https://api.vika.cn/fusion/v1/datasheets/dst6tnv0XEY6znlSCq/records?viewId=viwgL24ijcyXX&fieldKey=name',
-  header,
-  success: res => {
-    console.debug(res)
-  },
-  fail: err => {
-    console.error(err)
-  }
-})
-
-wx.request({
-  method: 'POST',
-  url: 'https://api.vika.cn/fusion/v1/datasheets/dst6tnv0XEY6znlSCq/records?viewId=viwgL24ijcyXX&fieldKey=name',
-  header,
-  data: {
-    "records": [
-      {
-        "fields": {
-          "ID": "1",
-          "名称": "大客户",
-          "成员": "[\"123\"]",
-          "数量": 1
-        }
-      }
-    ],
-    "fieldKey": "name"
-  },
-  success: res => {
-    console.debug(res)
-  },
-  fail: err => {
-    console.error(err)
-  }
-})
-
-wx.request({
-  method: 'PUT',
-  url: 'https://api.vika.cn/fusion/v1/datasheets/dst6tnv0XEY6znlSCq/records?viewId=viwgL24ijcyXX&fieldKey=name',
-  header,
-  data: {
-    "records": [
-      {
-        "recordId": "recmmeFaVKZab",
-        "fields": {
-          "ID": "1",
-          "名称": "大客户",
-          "成员": "[\"123\"]",
-          "数量": new Date().getTime()
-        }
-      }
-    ],
-    "fieldKey": "name"
-  },
-  success: res => {
-    console.debug(res)
-  },
-  fail: err => {
-    console.error(err)
-  }
-})
-
-const db = wx.cloud.database({
-  env: 'release-j16sy'
-})
+// const db = wx.cloud.database({
+//   env: 'release-j16sy'
+// })
 CustomPage({
   data: {
     namelist: [{
@@ -126,44 +62,117 @@ CustomPage({
     tabs: [
       {
         title: '全部',
-        title2: '微信小程序直播',
-        img: 'http://mmbiz.qpic.cn/sz_mmbiz_png/GEWVeJPFkSHALb0g5rCc4Jf5IqDfdwhWJ43I1IvriaV5uFr9fLAuv3uxHR7DQstbIxhNXFoQEcxGzWwzQUDBd6Q/0?wx_fmt=png',
-        desc: '微信小程序直播系列课程持续更新中，帮助大家更好地理解、应用微信小程序直播功能。',
       }, {
         title: '联系人',
-        title2: '小程序开发进阶',
-        img: 'http://mmbiz.qpic.cn/sz_mmbiz_jpg/GEWVeJPFkSEV5QjxLDJaL6ibHLSZ02TIcve0ocPXrdTVqGGbqAmh5Mw9V7504dlEiatSvnyibibHCrVQO2GEYsJicPA/0?wx_fmt=jpeg',
-        desc: '本视频系列课程，由腾讯课堂NEXT学院与微信团队联合出品，通过实战案例，深入浅出地进行讲解。',
       },
       {
         title: '群组',
-        title2: '微信小程序直播',
-        img: 'http://mmbiz.qpic.cn/sz_mmbiz_png/GEWVeJPFkSHALb0g5rCc4Jf5IqDfdwhWJ43I1IvriaV5uFr9fLAuv3uxHR7DQstbIxhNXFoQEcxGzWwzQUDBd6Q/0?wx_fmt=png',
-        desc: '微信小程序直播系列课程持续更新中，帮助大家更好地理解、应用微信小程序直播功能。',
-      },
-      {
-        title: '+分组',
-        title2: '微信小程序直播',
-        img: 'http://mmbiz.qpic.cn/sz_mmbiz_png/GEWVeJPFkSHALb0g5rCc4Jf5IqDfdwhWJ43I1IvriaV5uFr9fLAuv3uxHR7DQstbIxhNXFoQEcxGzWwzQUDBd6Q/0?wx_fmt=png',
-        desc: '微信小程序直播系列课程持续更新中，帮助大家更好地理解、应用微信小程序直播功能。',
       }
     ]
+  },
+  getGroup() {
+    let header = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.data.secret.vika.token}`
+    }
+
+    wx.request({
+      method: 'GET',
+      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.vika.sysTables.group}/records?fieldKey=name`,
+      header,
+      success: res => {
+        console.debug(res)
+        let records = res.data.data.records
+        console.debug(records)
+        let tabs = this.data.tabs
+        records.forEach(record => {
+          record.fields.recordId = record.recordId
+          record.fields.members = JSON.parse(record.fields.members)
+          tabs.push(record.fields)
+        })
+        this.setData({
+          tabs
+        })
+      },
+      fail: err => {
+        console.error(err)
+      }
+    })
+  },
+  updateGroup(fields, recordId) {
+    // record = {
+    //   "recordId": "recmmeFaVKZab",
+    //   "fields": {
+    //     "ID": "1",
+    //     "名称": "大客户",
+    //     "成员": "[\"123\"]",
+    //     "数量": new Date().getTime()
+    //   }
+    // }
+    let header = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.data.secret.vika.token}`
+    }
+    wx.request({
+      method: 'PUT',
+      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.vika.sysTables.group}/records?fieldKey=name`,
+      header,
+      data: {
+        "records": [
+          {
+            "recordId": recordId,
+            "fields": fields
+          },
+        ],
+        "fieldKey": "name"
+      },
+      success: res => {
+        console.debug(res)
+      },
+      fail: err => {
+        console.error(err)
+      }
+    })
+  },
+  addGroup(fields) {
+    // record = {
+    //   "fields": {
+    //     "ID": "1",
+    //     "名称": "大客户",
+    //     "成员": "[\"123\"]",
+    //     "数量": 1
+    //   }
+    // }
+    let header = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.data.secret.vika.token}`
+    }
+    wx.request({
+      method: 'POST',
+      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.vika.sysTables.group}/records?fieldKey=name`,
+      header,
+      data: {
+        "records": [
+          {
+            "fields": fields
+          }
+        ],
+        "fieldKey": "name"
+      },
+      success: res => {
+        console.debug(res)
+      },
+      fail: err => {
+        console.error(err)
+      }
+    })
   },
   onTabClick(e) {
     let that = this
     const index = e.detail.index
-    let roomList = that.data.bot.roomList || []
-    if (index == 2) {
-      this.setData({
-        roomlist: that.pinyinSort(roomList)
-      })
-    }
-    if (index == 0) {
-      this.setData({
-        alllist: that.pinyinSort(roomList.concat(that.data.bot.contactList || []))
-      })
-    }
+    let members = that.data.tabs[index].members || []
     this.setData({
+      list: that.pinyinSort(members),
       activeTab: index
     })
   },
@@ -174,14 +183,20 @@ CustomPage({
     }
   },
   onLoad(options) {
-    this.getCitys()
+    this.setData({
+      secret: app.globalData.secret,
+      vika: app.globalData.vika
+    }, res => {
+      this.getGroup()
+      this.getCitys()
+    })
   },
   pinyinSort(name) {
     var pinyinArray = new Array()
     for (var bukn = 0; bukn < name.length; bukn++) {
       var o = new Object()
       var ken = Pinyin.getSpell(name[bukn]._payload.alias || name[bukn]._payload.name || name[bukn]._payload.topic || name[bukn]._payload.id, function (charactor, spell) {
-        console.log(charactor, spell);
+        // console.log(charactor, spell);
         return spell[1];
       });
       o.name = name[bukn]._payload.alias || name[bukn]._payload.name || name[bukn]._payload.topic || name[bukn]._payload.id
@@ -189,8 +204,8 @@ CustomPage({
       o.member = name[bukn]
       pinyinArray.push(o)
     }
-    console.log("pinyinArray")
-    console.log(pinyinArray)
+    // console.log("pinyinArray")
+    // console.log(pinyinArray)
     // pinyinArray = pinyinArray.sort(compare("pinyin"))
     let map = {
       alpha: '',
@@ -209,8 +224,8 @@ CustomPage({
         member: item.member
       })
     })
-    console.log("map")
-    console.log(map)
+    // console.log("map")
+    // console.log(map)
     var turn = new Array()
     var letters = "*ABCDEFGHIJKLNMOPQRSTUVWXYZ".split('');
     for (var i = 1; i < letters.length; i++) {
@@ -222,13 +237,12 @@ CustomPage({
         turn.push(obj)
       }
     }
-    console.log("trun")
-    console.log(turn)
+    // console.log("trun")
+    // console.log(turn)
     return turn;
   },
   getCitys() {
     const that = this
-
     wx.getStorage({
       key: 'bot',
       success(res) {
@@ -238,10 +252,16 @@ CustomPage({
         })
         let contactList = res.data.contactList || []
         let roomList = that.data.bot.roomList || []
-        console.debug(contactList)
+        let alllist = roomList.concat(contactList)
+        // console.debug(JSON.stringify(contactList))
+        let tabs = that.data.tabs
+        tabs[0].members = alllist
+        tabs[1].members = contactList
+        tabs[2].members = roomList
+
         that.setData({
-          namelist: that.pinyinSort(contactList),
-          alllist: that.pinyinSort(roomList.concat(contactList))
+          // namelist: that.pinyinSort(contactList),
+          list: that.pinyinSort(alllist)
         })
       },
       fail: err => {

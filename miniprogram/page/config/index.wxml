@@ -1,14 +1,13 @@
 <!--page/config/index.wxml-->
 
 <view class="container">
-
   <view class="page-body">
     <form catchsubmit="saveConfig" catchreset="formReset">
 
       <view class="page-section">
         <view class="page-section-title">按模板配置配置文件后保存</view>
         <view class="textarea-wrp padding">
-          <textarea name='secret' bindblur="bindTextAreaBlur" value="{{secret}}" placeholder='输入JSON字符串格式的配置文件' auto-height />
+          <textarea name='secret' maxlength="2048" bindblur="bindTextAreaBlur" value="{{secret}}" placeholder='输入JSON字符串格式的配置文件' style="height:700rpx;" />
         </view>
       </view>
 

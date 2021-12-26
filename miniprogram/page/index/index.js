@@ -1,6 +1,8 @@
 // page/index/index.js
-import CustomPage from '../base/CustomPage'
-const base64 = require('../images/base64')
+const app = getApp()
+const db = wx.cloud.database()
+const _ = db.command
+
 const util = require('../../util/util')
 const tobase64 = require('../../util/base64')
 // 加密
@@ -10,26 +12,23 @@ console.log(util.Encrypt('123456'))
 console.log(util.Decrypt('5A09AE89579945B7AB80A9DC08F66FAA'))
 // 123456
 
-// const mpAdapter = require('axios-miniprogram-adapter');
-// const Vika = require('@vikadata/vika');
+let header = {}
 
-// const vika = new Vika({
-//   token: 'uskv0Tuj5MxADtcsI1C0Vkh',
-//   adapter: mpAdapter,
-// });
+wx.request({
+  method: 'GET',
+  url: 'https://api.airtable.com/v0/applclZm5iXmTphEu/ChatRecord',
+  header: {
+    'Authorization': 'Bearer keypHmMOxLky9wU8T',
+    'X-Airtable-Client-Secret': 'foo-123123'
+  },
+  success: res => {
+    console.debug('airtable==============', res)
+  },
+  fail: err => {
+    console.error(err)
+  }
+})
 
-// vika.datasheet('spcU1WBEPXNYH').records.query().then(resp => {
-//   console.log(resp.data?.records)
-// }).catch(err=>{{
-//   console.error(err)
-// }})
-
-let header = {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer uskv0Tuj5MxADtcsI1C0Vkh'
-}
-
-const app = getApp();
 var protobuf = require('../../weichatPb/protobuf.js');
 app.globalData._protobuf = protobuf;
 
@@ -75,17 +74,17 @@ var {
   Message
 } = require('../../util/paho-mqtt')
 
-const IoTCoreId = 'alvxdkj'
-const DeviceKey = 'mpclient'
-const DeviceSecret = 'sIQmoZzHwRYLfEUL'
+// const IoTCoreId = 'alvxdkj'
+let DeviceKey = 'mpclient'
+// const DeviceSecret = 'sIQmoZzHwRYLfEUL'
 
-const userName = IoTCoreId + '/' + DeviceKey
-const password = DeviceSecret
+let username = ''
+let password = ''
 const clientid = "DeviceKey"
 const host = 'baiduiot.iot.gz.baidubce.com'
 var port = 443
-const events_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/events`
-const msg_topic = `$iot/7813159edb154cb1a5c7cca80b82509f/msg`
+let events_topic = `$iot/${DeviceKey}/events`
+let msg_topic = `$iot/${DeviceKey}/msg`
 
 Page({
 
@@ -146,24 +145,62 @@ Page({
    */
   onLoad(options) {
     let that = this
-    this.setData({
-      icon20: base64.icon20,
-      icon60: base64.icon60
-    })
     wx.cloud.callFunction({
       name: 'login',
       data: {},
       success: res => {
         console.debug(res)
+        let user = res.result
         that.setData({
-          user: res.result
+          user
         }, res => {
-          if (that.data.user.openid == "oG5zq0EgLNPu2uFbej7rn1Mdonko") {
-            this.doConnect()
-          }
+
+          db.collection('secret')
+            .doc(user.openid)
+            .get()
+            .then(res => {
+              console.debug(res)
+              let secret = res.data
+              username = secret.mqtt.username
+              password = secret.mqtt.password
+              DeviceKey = secret.mqtt.DeviceKey
+              events_topic = `$iot/${DeviceKey}/events`
+              msg_topic = `$iot/${DeviceKey}/msg`
+              header = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${secret.vika.token}`
+              }
+              app.globalData.secret = secret
+              that.setData({
+                secret
+              })
+              if (secret.mqtt) {
+                this.doConnect()
+              }
+            })
+            .catch(err => {
+              console.error(err)
+              wx.showToast({
+                title: '请初始化配置',
+              })
+            })
         })
       },
       fail: console.error
+    })
+    wx.cloud.callFunction({
+      name: 'checkconfig',
+      data: {},
+      success: res => {
+        console.debug(res)
+        app.globalData.vika = res.result
+        that.setData({
+          vika: res.result
+        })
+      },
+      fail: err => {
+        console.error(err)
+      }
     })
     wx.getStorage({
       key: 'latestMsg',
@@ -216,7 +253,7 @@ Page({
 
     var connect_info = {
       timeout,
-      userName,
+      userName: username,
       password,
       keepAliveInterval,
       cleanSession,
@@ -281,7 +318,7 @@ Page({
 
     if (client && client.isConnected()) {
       wx.showToast({
-        title: '订阅成功'
+        title: '已上线'
       })
       return client.subscribe(filter, subscribeOptions);
     } else {
@@ -367,9 +404,15 @@ Page({
   connectionLost(e) {
     var that = this
     console.debug('失去连接', e)
-    wx.closeSocket()
+    try {
+      wx.closeSocket()
+    } catch (err) {
+      console.error(err)
+    }
     that.setData({
       is_connect: false
+    }, res => {
+      that.doConnect()
     })
 
   },
@@ -429,33 +472,33 @@ Page({
       if (that.eventChannel && id == that.data.wxid) {
         that.eventChannel.emit('acceptDataFromOpenerPage', { msg })
       }
-      wx.request({
-        method: 'POST',
-        url: 'https://api.vika.cn/fusion/v1/datasheets/dstsL6DH8BxYP4Fbl4/records?viewId=viwutsKh3DuAd&fieldKey=name',
-        header,
-        data: {
-          "records": [
-            {
-              "fields": {
-                "ID": reqId,
-                "时间": timeHms,
-                "来自": msg.talker._payload.name || '我',
-                "接收": msg.room.id ? msg.room._payload.topic : '单聊',
-                "内容": msg.text,
-                "发送者ID": msg.talker.id != 'null' ? msg.talker.id : '--',
-                "接收方ID": msg.room.id ? msg.room.id : '--',
-              }
-            }
-          ],
-          "fieldKey": "name"
-        },
-        success: res => {
-          console.debug(res)
-        },
-        fail: err => {
-          console.error(err)
-        }
-      })
+      // wx.request({
+      //   method: 'POST',
+      //   url: 'https://api.vika.cn/fusion/v1/datasheets/dstsL6DH8BxYP4Fbl4/records?viewId=viwutsKh3DuAd&fieldKey=name',
+      //   header,
+      //   data: {
+      //     "records": [
+      //       {
+      //         "fields": {
+      //           "ID": reqId,
+      //           "时间": timeHms,
+      //           "来自": msg.talker._payload.name || '我',
+      //           "接收": msg.room.id ? msg.room._payload.topic : '单聊',
+      //           "内容": msg.text,
+      //           "发送者ID": msg.talker.id != 'null' ? msg.talker.id : '--',
+      //           "接收方ID": msg.room.id ? msg.room.id : '--',
+      //         }
+      //       }
+      //     ],
+      //     "fieldKey": "name"
+      //   },
+      //   success: res => {
+      //     console.debug(res)
+      //   },
+      //   fail: err => {
+      //     console.error(err)
+      //   }
+      // })
       this.setData({
         latestMsg,
         latestMsgArr
@@ -471,131 +514,131 @@ Page({
     }
 
     if (payload.properties) {
-      if (payload.properties.contactList) {
-        wx.request({
-          method: 'PUT',
-          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
-          header,
-          data: {
-            "records": [
-              {
-                "recordId": "rec622Sw8WWHR",
-                "fields": {
-                  "key": "contactList",
-                  "value": JSON.stringify(payload.properties.contactList)
-                }
-              }
-            ],
-            "fieldKey": "name"
-          },
-          success: res => {
-            console.debug(res)
-          },
-          fail: err => {
-            console.error(err)
-          }
-        })
-      }
-      if (payload.properties.roomList) {
-        wx.request({
-          method: 'PUT',
-          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
-          header,
-          data: {
-            "records": [
-              {
-                "recordId": "recT6KaumagKP",
-                "fields": {
-                  "key": "roomList",
-                  "value": JSON.stringify(payload.properties.roomList)
-                }
-              }
-            ],
-            "fieldKey": "name"
-          },
-          success: res => {
-            console.debug(res)
-          },
-          fail: err => {
-            console.error(err)
-          }
-        })
-      }
-      if (payload.properties.lastUpdate) {
-        wx.request({
-          method: 'PUT',
-          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
-          header,
-          data: {
-            "records": [
-              {
-                "recordId": "recxmz38EpnfJ",
-                "fields": {
-                  "key": "lastUpdate",
-                  "value": JSON.stringify(payload.properties.lastUpdate)
-                }
-              }
-            ],
-            "fieldKey": "name"
-          },
-          success: res => {
-            console.debug(res)
-          },
-          fail: err => {
-            console.error(err)
-          }
-        })
-      }
-      if (payload.properties.timeHms) {
-        wx.request({
-          method: 'PUT',
-          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
-          header,
-          data: {
-            "records": [
-              {
-                "recordId": "rec6hfgl9OK34",
-                "fields": {
-                  "key": "timeHms",
-                  "value": JSON.stringify(payload.properties.timeHms)
-                }
-              }
-            ],
-            "fieldKey": "name"
-          },
-          success: res => {
-            console.debug(res)
-          },
-          fail: err => {
-            console.error(err)
-          }
-        })
-      }
-      if (payload.properties.userSelf) {
-        wx.request({
-          method: 'PUT',
-          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
-          header,
-          data: {
-            "records": [
-              {
-                "recordId": "recPkJcTqPKB2",
-                "fields": {
-                  "key": "roomList",
-                  "value": JSON.stringify(payload.properties.userSelf)
-                }
-              }
-            ],
-            "fieldKey": "name"
-          },
-          success: res => {
-            console.debug(res)
-          },
-          fail: err => {
-            console.error(err)
-          }
-        })
-      }
+      // if (payload.properties.contactList) {
+      //   wx.request({
+      //     method: 'PUT',
+      //     url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+      //     header,
+      //     data: {
+      //       "records": [
+      //         {
+      //           "recordId": "rec622Sw8WWHR",
+      //           "fields": {
+      //             "key": "contactList",
+      //             "value": JSON.stringify(payload.properties.contactList)
+      //           }
+      //         }
+      //       ],
+      //       "fieldKey": "name"
+      //     },
+      //     success: res => {
+      //       console.debug(res)
+      //     },
+      //     fail: err => {
+      //       console.error(err)
+      //     }
+      //   })
+      // }
+      // if (payload.properties.roomList) {
+      //   wx.request({
+      //     method: 'PUT',
+      //     url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+      //     header,
+      //     data: {
+      //       "records": [
+      //         {
+      //           "recordId": "recT6KaumagKP",
+      //           "fields": {
+      //             "key": "roomList",
+      //             "value": JSON.stringify(payload.properties.roomList)
+      //           }
+      //         }
+      //       ],
+      //       "fieldKey": "name"
+      //     },
+      //     success: res => {
+      //       console.debug(res)
+      //     },
+      //     fail: err => {
+      //       console.error(err)
+      //     }
+      //   })
+      // }
+      // if (payload.properties.lastUpdate) {
+      //   wx.request({
+      //     method: 'PUT',
+      //     url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+      //     header,
+      //     data: {
+      //       "records": [
+      //         {
+      //           "recordId": "recxmz38EpnfJ",
+      //           "fields": {
+      //             "key": "lastUpdate",
+      //             "value": JSON.stringify(payload.properties.lastUpdate)
+      //           }
+      //         }
+      //       ],
+      //       "fieldKey": "name"
+      //     },
+      //     success: res => {
+      //       console.debug(res)
+      //     },
+      //     fail: err => {
+      //       console.error(err)
+      //     }
+      //   })
+      // }
+      // if (payload.properties.timeHms) {
+      //   wx.request({
+      //     method: 'PUT',
+      //     url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+      //     header,
+      //     data: {
+      //       "records": [
+      //         {
+      //           "recordId": "rec6hfgl9OK34",
+      //           "fields": {
+      //             "key": "timeHms",
+      //             "value": JSON.stringify(payload.properties.timeHms)
+      //           }
+      //         }
+      //       ],
+      //       "fieldKey": "name"
+      //     },
+      //     success: res => {
+      //       console.debug(res)
+      //     },
+      //     fail: err => {
+      //       console.error(err)
+      //     }
+      //   })
+      // }
+      // if (payload.properties.userSelf) {
+      //   wx.request({
+      //     method: 'PUT',
+      //     url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+      //     header,
+      //     data: {
+      //       "records": [
+      //         {
+      //           "recordId": "recPkJcTqPKB2",
+      //           "fields": {
+      //             "key": "roomList",
+      //             "value": JSON.stringify(payload.properties.userSelf)
+      //           }
+      //         }
+      //       ],
+      //       "fieldKey": "name"
+      //     },
+      //     success: res => {
+      //       console.debug(res)
+      //     },
+      //     fail: err => {
+      //       console.error(err)
+      //     }
+      //   })
+      // }
       let bot = {}
       try {
         var old_bot = wx.getStorageSync('bot')

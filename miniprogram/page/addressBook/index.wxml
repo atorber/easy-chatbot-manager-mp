@@ -4,16 +4,26 @@
   <mp-tabs tabs="{{tabs}}" activeTab="{{activeTab}}" swiperClass="weui-tabs-swiper" bindtabclick="onTabClick" bindchange="onChange" activeClass="tab-bar-title__selected">
   </mp-tabs>
 
-  <mp-indexList id="1" wx:if="{{activeTab==1}}" class="city__list" list="{{namelist}}">
-    <!-- <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" /> -->
+  <!-- <mp-indexList id="1" wx:if="{{activeTab==1}}" class="city__list" list="{{namelist}}">
+    <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
   </mp-indexList>
 
   <mp-indexList id="2" wx:if="{{activeTab==2}}" class="city__list" list="{{roomlist}}">
+    <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
+  </mp-indexList> -->
+
+  <mp-indexList id="0" class="city__list" list="{{list}}">
+    <view class="padding">
+      <!-- <button type="primary" plain="true">添加</button> -->
+      <button wx:if="{{activeTab<=2}}" class="mini-btn" type="primary" size="mini">+ 添加分组</button>
+      <button wx:if="{{activeTab>2}}" class="mini-btn text-center" type="primary" size="mini">群发消息</button>
+      <button wx:if="{{activeTab>2}}" class="mini-btn text-center" type="" size="mini">删除分组</button>
+    </view>
     <!-- <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" /> -->
   </mp-indexList>
 
-  <mp-indexList id="0" wx:if="{{activeTab==0}}" class="city__list" list="{{alllist}}">
-    <!-- <image src="{{item.image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" /> -->
-  </mp-indexList>
+  <!-- <view class="padding" wx:if="{{activeTab==(tabs.length-1)}}">
+    开发中...
+  </view> -->
 
 </view>
