@@ -80,7 +80,7 @@ let DeviceKey = 'mpclient'
 
 let username = ''
 let password = ''
-const clientid = "DeviceKey"
+const clientid = "mp_chatbot_" + new Date().getTime()
 const host = 'baiduiot.iot.gz.baidubce.com'
 var port = 443
 let events_topic = `$iot/${DeviceKey}/events`
