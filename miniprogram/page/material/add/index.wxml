@@ -1,0 +1,43 @@
+<!--page/material/add/index.wxml-->
+
+<view class="page" data-weui-theme="{{theme}}">
+  <mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
+  <mp-form-page title="添加素材" subtitle="">
+    <mp-form id="form" rules="{{rules}}" models="{{formData}}">
+      <mp-cells title="消息类型">
+        <mp-cell has-header="{{false}}" ext-class="weui-cell_select">
+          <picker bindchange="bindAccountChange" value="{{accountIndex}}" range="{{accounts}}">
+            <view class="weui-select">{{accounts[accountIndex]}}</view>
+          </picker>
+        </mp-cell>
+      </mp-cells>
+      <mp-cells title="消息内容">
+        <mp-cell has-header="{{false}}" has-footer="{{false}}" title="" ext-class="">
+          <textarea class="weui-textarea" placeholder="请输入文本" style="height: 3.3em" />
+          <view class="weui-textarea-counter">0/200</view>
+        </mp-cell>
+      </mp-cells>
+      <mp-cells title="图片地址">
+        <mp-cell has-header="{{false}}" has-footer="{{false}}" title="" ext-class="">
+          <textarea class="weui-textarea" placeholder="请输入文本" style="height: 3.3em" />
+          <view class="weui-textarea-counter">0/200</view>
+        </mp-cell>
+      </mp-cells>
+      <mp-cells title="选择图片">
+        <mp-cell has-header="{{false}}" ext-class="weui-cell_select">
+          <picker bindchange="bindAccountChange" value="{{accountIndex}}" range="{{accounts}}">
+            <view class="weui-select">{{accounts[accountIndex]}}</view>
+          </picker>
+        </mp-cell>
+      </mp-cells>
+      <mp-cells title="发送对象">
+        <mp-checkbox-group prop="checkbox" multi="{{true}}" bindchange="checkboxChange">
+          <mp-checkbox wx:for="{{checkboxItems}}" wx:key="value" label="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></mp-checkbox>
+        </mp-checkbox-group>
+      </mp-cells>
+    </mp-form>
+    <view slot="button">
+      <button class="weui-btn" type="primary" bindtap="submitForm">确定</button>
+    </view>
+  </mp-form-page>
+</view>

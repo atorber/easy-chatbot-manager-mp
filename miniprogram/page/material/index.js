@@ -26,6 +26,11 @@ Page({
       }
     }
   },
+  toAdd(){
+    wx.navigateTo({
+      url: '/page/material/add/index',
+    })
+  },
   toPub(e) {
     console.debug(e)
     let msg = JSON.parse(e.currentTarget.dataset.msg.fields.message)

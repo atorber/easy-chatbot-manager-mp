@@ -3,7 +3,7 @@
   <view class="page__bd">
     <view class="padding">
       <!-- <button type="primary" plain="true">添加</button> -->
-      <button class="mini-btn" type="primary" size="mini">+ 添加素材</button>
+      <button bindtap="toAdd" class="mini-btn" type="primary" size="mini">+ 添加素材</button>
     </view>
     <mp-cells title="">
       <mp-cell wx:for="{{list}}" wx:for-item="item">

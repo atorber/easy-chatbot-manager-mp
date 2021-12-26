@@ -1,0 +1,6 @@
+/* page/material/add/index.wxss */
+@import '../../common.wxss';
+
+.weui-agree .weui-agree__text {
+  display: inline;
+}

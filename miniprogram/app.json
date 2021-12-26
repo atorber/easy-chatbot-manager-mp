@@ -99,7 +99,8 @@
     "page/workbench/index",
     "page/file/index",
     "page/material/index",
-    "page/config/index"
+    "page/config/index",
+    "page/material/add/index"
   ],
   "subpackages": [
     {
