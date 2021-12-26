@@ -1,0 +1,4 @@
+/* page/config/index.wxss */
+.padding{
+  padding: 30rpx;
+}

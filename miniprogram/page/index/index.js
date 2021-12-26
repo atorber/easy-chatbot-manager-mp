@@ -9,6 +9,26 @@ console.log(util.Encrypt('123456'))
 // 解密
 console.log(util.Decrypt('5A09AE89579945B7AB80A9DC08F66FAA'))
 // 123456
+
+// const mpAdapter = require('axios-miniprogram-adapter');
+// const Vika = require('@vikadata/vika');
+
+// const vika = new Vika({
+//   token: 'uskv0Tuj5MxADtcsI1C0Vkh',
+//   adapter: mpAdapter,
+// });
+
+// vika.datasheet('spcU1WBEPXNYH').records.query().then(resp => {
+//   console.log(resp.data?.records)
+// }).catch(err=>{{
+//   console.error(err)
+// }})
+
+let header = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer uskv0Tuj5MxADtcsI1C0Vkh'
+}
+
 const app = getApp();
 var protobuf = require('../../weichatPb/protobuf.js');
 app.globalData._protobuf = protobuf;
@@ -151,6 +171,15 @@ Page({
         // console.log(res.data)
         that.setData({
           latestMsg: res.data
+        })
+      }
+    })
+    wx.getStorage({
+      key: 'latestMsgArr',
+      success(res) {
+        // console.log(res.data)
+        that.setData({
+          latestMsgArr: res.data
         })
       }
     })
@@ -372,9 +401,9 @@ Page({
     var time_text = new Date().toUTCString()
     let latestMsg = that.data.latestMsg
     let latestMsgArr = that.data.latestMsgArr || []
-    console.debug(e.payloadBytes)
+    // console.debug(e.payloadBytes)
     let payload = MessageMessage.decode(e.payloadBytes);
-    // console.debug(payload)
+    console.debug(payload)
     if (payload.events) {
       payload.events = JSON.parse(payload.events)
     }
@@ -386,7 +415,10 @@ Page({
     // let payload = JSON.parse(e.payloadString)
     if (payload.events && payload.events.message) {
       let msg = payload.events.message
+      let timeHms = payload.timeHms
+      let reqId = payload.reqId
       let id = msg.room.id || msg.talker.id
+      msg.timeHms = timeHms
       latestMsg[id] = msg
       let index = latestMsgArr.indexOf(id)
       if (index != -1) {
@@ -397,6 +429,33 @@ Page({
       if (that.eventChannel && id == that.data.wxid) {
         that.eventChannel.emit('acceptDataFromOpenerPage', { msg })
       }
+      wx.request({
+        method: 'POST',
+        url: 'https://api.vika.cn/fusion/v1/datasheets/dstsL6DH8BxYP4Fbl4/records?viewId=viwutsKh3DuAd&fieldKey=name',
+        header,
+        data: {
+          "records": [
+            {
+              "fields": {
+                "ID": reqId,
+                "时间": timeHms,
+                "来自": msg.talker._payload.name || '我',
+                "接收": msg.room.id ? msg.room._payload.topic : '单聊',
+                "内容": msg.text,
+                "发送者ID": msg.talker.id != 'null' ? msg.talker.id : '--',
+                "接收方ID": msg.room.id ? msg.room.id : '--',
+              }
+            }
+          ],
+          "fieldKey": "name"
+        },
+        success: res => {
+          console.debug(res)
+        },
+        fail: err => {
+          console.error(err)
+        }
+      })
       this.setData({
         latestMsg,
         latestMsgArr
@@ -412,6 +471,131 @@ Page({
     }
 
     if (payload.properties) {
+      if (payload.properties.contactList) {
+        wx.request({
+          method: 'PUT',
+          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+          header,
+          data: {
+            "records": [
+              {
+                "recordId": "rec622Sw8WWHR",
+                "fields": {
+                  "key": "contactList",
+                  "value": JSON.stringify(payload.properties.contactList)
+                }
+              }
+            ],
+            "fieldKey": "name"
+          },
+          success: res => {
+            console.debug(res)
+          },
+          fail: err => {
+            console.error(err)
+          }
+        })
+      }
+      if (payload.properties.roomList) {
+        wx.request({
+          method: 'PUT',
+          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+          header,
+          data: {
+            "records": [
+              {
+                "recordId": "recT6KaumagKP",
+                "fields": {
+                  "key": "roomList",
+                  "value": JSON.stringify(payload.properties.roomList)
+                }
+              }
+            ],
+            "fieldKey": "name"
+          },
+          success: res => {
+            console.debug(res)
+          },
+          fail: err => {
+            console.error(err)
+          }
+        })
+      }
+      if (payload.properties.lastUpdate) {
+        wx.request({
+          method: 'PUT',
+          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+          header,
+          data: {
+            "records": [
+              {
+                "recordId": "recxmz38EpnfJ",
+                "fields": {
+                  "key": "lastUpdate",
+                  "value": JSON.stringify(payload.properties.lastUpdate)
+                }
+              }
+            ],
+            "fieldKey": "name"
+          },
+          success: res => {
+            console.debug(res)
+          },
+          fail: err => {
+            console.error(err)
+          }
+        })
+      }
+      if (payload.properties.timeHms) {
+        wx.request({
+          method: 'PUT',
+          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+          header,
+          data: {
+            "records": [
+              {
+                "recordId": "rec6hfgl9OK34",
+                "fields": {
+                  "key": "timeHms",
+                  "value": JSON.stringify(payload.properties.timeHms)
+                }
+              }
+            ],
+            "fieldKey": "name"
+          },
+          success: res => {
+            console.debug(res)
+          },
+          fail: err => {
+            console.error(err)
+          }
+        })
+      }
+      if (payload.properties.userSelf) {
+        wx.request({
+          method: 'PUT',
+          url: 'https://api.vika.cn/fusion/v1/datasheets/dstpmrfEPXCm7QBj42/records?viewId=viwJGZekJrvch&fieldKey=name',
+          header,
+          data: {
+            "records": [
+              {
+                "recordId": "recPkJcTqPKB2",
+                "fields": {
+                  "key": "roomList",
+                  "value": JSON.stringify(payload.properties.userSelf)
+                }
+              }
+            ],
+            "fieldKey": "name"
+          },
+          success: res => {
+            console.debug(res)
+          },
+          fail: err => {
+            console.error(err)
+          }
+        })
+      }
       let bot = {}
       try {
         var old_bot = wx.getStorageSync('bot')
@@ -450,6 +634,7 @@ Page({
         messagePayload: text
       }
     }
+    console.debug(JSON.stringify(payload))
     // payload = JSON.stringify(payload)
     payload.params = JSON.stringify(payload.params)
     payload.timestamp = String(payload.timestamp)

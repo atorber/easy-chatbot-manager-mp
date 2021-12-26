@@ -1,0 +1,4 @@
+/* page/material/index.wxss */
+.padding {
+  padding: 0 30rpx 0 30rpx;
+}

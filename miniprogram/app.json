@@ -97,7 +97,9 @@
     "page/explore/index",
     "page/userCenter/index",
     "page/workbench/index",
-    "page/file/index"
+    "page/file/index",
+    "page/material/index",
+    "page/config/index"
   ],
   "subpackages": [
     {
@@ -237,10 +239,10 @@
         "text": "工作台"
       },
       {
-        "pagePath": "page/file/index",
+        "pagePath": "page/material/index",
         "iconPath": "@iconPathCloud1",
         "selectedIconPath": "@selectedIconPathCloud1",
-        "text": "文档"
+        "text": "素材"
       },
       {
         "pagePath": "page/userCenter/index",

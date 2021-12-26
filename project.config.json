@@ -14,7 +14,7 @@
     "minified": true,
     "newFeature": true,
     "coverView": true,
-    "nodeModules": false,
+    "nodeModules": true,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -44,7 +44,7 @@
     "useCompilerPlugins": false
   },
   "compileType": "miniprogram",
-  "libVersion": "2.11.2",
+  "libVersion": "2.21.1",
   "appid": "wxdb87a064478d2e7e",
   "projectname": "mp-chat",
   "isGameTourist": false,

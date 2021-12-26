@@ -1,0 +1,21 @@
+<!--page/config/index.wxml-->
+
+<view class="container">
+
+  <view class="page-body">
+    <form catchsubmit="saveConfig" catchreset="formReset">
+
+      <view class="page-section">
+        <view class="page-section-title">按模板配置配置文件后保存</view>
+        <view class="textarea-wrp padding">
+          <textarea name='secret' bindblur="bindTextAreaBlur" value="{{secret}}" placeholder='输入JSON字符串格式的配置文件' auto-height />
+        </view>
+      </view>
+
+      <view class="btn-area">
+        <button type="primary" formType="submit">保存</button>
+        <button formType="reset">复制模板</button>
+      </view>
+    </form>
+  </view>
+</view>

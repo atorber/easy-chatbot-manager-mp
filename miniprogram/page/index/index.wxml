@@ -13,7 +13,7 @@
         <view class="impleName" style="font-size: 13px;color: #888888;">{{latestMsg[item].text}}</view>
         <view slot="footer">
           <view style="display: inline-block;vertical-align:middle; font-size: 26rpx;">
-            <text>{{latestMsg[item].ts||'12:00'}}</text>
+            <text>{{latestMsg[item].ts||latestMsg[item].timeHms||'12:00'}}</text>
           </view>
         </view>
       </mp-cell>

@@ -1,4 +1,4 @@
-// page/file/index.js
+// page/material/index.js
 let header = {
   'Content-Type': 'application/json',
   'Authorization': 'Bearer uskv0Tuj5MxADtcsI1C0Vkh'
@@ -25,6 +25,11 @@ Page({
         ts: 0
       }
     }
+  },
+  toPub(e) {
+    console.debug(e)
+    let msg = JSON.parse(e.currentTarget.dataset.msg.fields.message)
+    console.debug(msg)
   },
   getList() {
     wx.request({

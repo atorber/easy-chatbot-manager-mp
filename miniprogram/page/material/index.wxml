@@ -1,0 +1,24 @@
+<!--page/material/index.wxml-->
+<view class="page" data-weui-theme="{{theme}}">
+  <view class="page__bd">
+    <view class="padding">
+      <!-- <button type="primary" plain="true">添加</button> -->
+      <button class="mini-btn" type="primary" size="mini">+ 添加素材</button>
+    </view>
+    <mp-cells title="">
+      <mp-cell wx:for="{{list}}" wx:for-item="item">
+        <view slot="title" style="position: relative;margin-right: 10px;">
+          <image src="{{item.fields.file[0].url||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
+          <!-- <mp-badge content="99+" style="position: absolute;top: -.4em;right: -.4em;" /> -->
+        </view>
+        <view>{{item.fields.text}}</view>
+        <view style="font-size: 13px;color: #888888;">{{item.fields.type}}</view>
+        <view slot="footer">
+          <view bindtap="toPub" data-msg="{{item}}" style="display: inline-block;vertical-align:middle; font-size: 26rpx;">
+            <text>发消息</text>
+          </view>
+        </view>
+      </mp-cell>
+    </mp-cells>
+  </view>
+</view>

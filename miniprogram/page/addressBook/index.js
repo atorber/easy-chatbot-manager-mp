@@ -2,6 +2,73 @@
 import CustomPage from '../base/CustomPage'
 import Pinyin from '..//../util/pinyin'
 
+let header = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer uskv0Tuj5MxADtcsI1C0Vkh'
+}
+
+wx.request({
+  method: 'GET',
+  url: 'https://api.vika.cn/fusion/v1/datasheets/dst6tnv0XEY6znlSCq/records?viewId=viwgL24ijcyXX&fieldKey=name',
+  header,
+  success: res => {
+    console.debug(res)
+  },
+  fail: err => {
+    console.error(err)
+  }
+})
+
+wx.request({
+  method: 'POST',
+  url: 'https://api.vika.cn/fusion/v1/datasheets/dst6tnv0XEY6znlSCq/records?viewId=viwgL24ijcyXX&fieldKey=name',
+  header,
+  data: {
+    "records": [
+      {
+        "fields": {
+          "ID": "1",
+          "名称": "大客户",
+          "成员": "[\"123\"]",
+          "数量": 1
+        }
+      }
+    ],
+    "fieldKey": "name"
+  },
+  success: res => {
+    console.debug(res)
+  },
+  fail: err => {
+    console.error(err)
+  }
+})
+
+wx.request({
+  method: 'PUT',
+  url: 'https://api.vika.cn/fusion/v1/datasheets/dst6tnv0XEY6znlSCq/records?viewId=viwgL24ijcyXX&fieldKey=name',
+  header,
+  data: {
+    "records": [
+      {
+        "recordId": "recmmeFaVKZab",
+        "fields": {
+          "ID": "1",
+          "名称": "大客户",
+          "成员": "[\"123\"]",
+          "数量": new Date().getTime()
+        }
+      }
+    ],
+    "fieldKey": "name"
+  },
+  success: res => {
+    console.debug(res)
+  },
+  fail: err => {
+    console.error(err)
+  }
+})
 
 const db = wx.cloud.database({
   env: 'release-j16sy'

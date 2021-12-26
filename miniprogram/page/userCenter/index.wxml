@@ -46,6 +46,10 @@
         <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
         </image>
       </mp-cell>
+      <mp-cell link url="/page/config/index" value="配置" footer="">
+        <image slot="icon" src="{{icon}}" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;">
+        </image>
+      </mp-cell>
     </mp-cells>
     <mp-cells title="">
       <mp-cell link url="/page/demo/index" value="UI示例" footer="查看">
