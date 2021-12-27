@@ -3,7 +3,11 @@
   <view class="page__bd">
     <view class="padding">
       <!-- <button type="primary" plain="true">添加</button> -->
-      <button bindtap="toAdd" class="mini-btn" type="primary" size="mini">+ 添加素材</button>
+      <button bindtap="toAdd" class="mini-btn" type="primary" size="mini">文本</button>
+      <button bindtap="toAdd" class="mini-btn" type="primary" size="mini">图片</button>
+      <button bindtap="toAdd" class="mini-btn" type="primary" size="mini">文件</button>
+      <button bindtap="toAdd" class="mini-btn" type="primary" size="mini">链接</button>
+      <button bindtap="toAdd" class="mini-btn" type="primary" size="mini">小程序</button>
     </view>
     <mp-cells title="">
       <mp-cell wx:for="{{list}}" wx:for-item="item">

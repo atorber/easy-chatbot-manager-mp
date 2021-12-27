@@ -5,125 +5,137 @@ Page({
    * 页面的初始数据
    */
   data: {
-    showTopTips: false,
-
-    radioItems: [
-      {name: '文本', value: '0', checked: true},
-      {name: '图片', value: '1'},
-      {name: '文件', value: '2'}
-    ],
-    checkboxItems: [
-      {name: 'standard is dealt for u.', value: '0', checked: true},
-      {name: 'standard is dealicient for u.', value: '1'}
-    ],
-    items: [
-      {name: 'USA', value: '美国'},
-      {name: 'CHN', value: '中国', checked: 'true'},
-      {name: 'BRA', value: '巴西'},
-      {name: 'JPN', value: '日本'},
-      {name: 'ENG', value: '英国'},
-      {name: 'TUR', value: '法国'},
-    ],
-
-    date: '2016-09-01',
-    time: '12:01',
-
-    countryCodes: ['+86', '+80', '+84', '+87'],
-    countryCodeIndex: 0,
-
-    countries: ['中国', '美国', '英国'],
-    countryIndex: 0,
-
-    accounts: ['文本', '图片', '文件'],
-    accountIndex: 0,
-
-    isAgree: false,
-    formData: {
-
-    },
-    rules: [{
-      name: 'radio',
-      rules: {required: false, message: '单选列表是必选项'},
-    }, {
-      name: 'checkbox',
-      rules: {required: true, message: '多选列表是必选项'},
-    }, {
-      name: 'name',
-      rules: {required: true, message: '请输入姓名'},
-    }, {
-      name: 'qq',
-      rules: {required: true, message: 'qq必填'},
-    }, {
-      name: 'mobile',
-      rules: [{required: true, message: 'mobile必填'}, {mobile: true, message: 'mobile格式不对'}],
-    }, {
-      name: 'vcode',
-      rules: {required: true, message: '验证码必填'},
-    }, {
-      name: 'idcard',
-      rules: {
-        validator(rule, value, param, modeels) {
-          if (!value || value.length !== 18) {
-            return 'idcard格式不正确'
+    formats: {},
+    readOnly: false,
+    placeholder: '开始输入...',
+    editorHeight: 300,
+    keyboardHeight: 0,
+    isIOS: false,
+    safeHeight: 0,
+    toolBarHeight: 50,
+  },
+  readOnlyChange() {
+    this.setData({
+      readOnly: !this.data.readOnly
+    })
+  },
+  onLoad() {
+    const { platform, safeArea, model, screenHeight} = wx.getSystemInfoSync()
+    let safeHeight;
+    if (safeArea) {
+      safeHeight = (screenHeight - safeArea.bottom);
+    } else  {
+      safeHeight = 32;
+    }
+    this._safeHeight = safeHeight;
+    let isIOS = platform === 'ios'
+    this.setData({ isIOS, safeHeight, toolBarHeight: isIOS ? safeHeight + 50 : 50 })
+    const that = this
+    this.updatePosition(0)
+    let keyboardHeight = 0
+    wx.onKeyboardHeightChange(res => {
+      if (res.height === keyboardHeight) {
+        return
+      }      
+      const duration = res.height > 0 ? res.duration * 1000 : 0
+      keyboardHeight = res.height
+      setTimeout(() => {
+        wx.pageScrollTo({
+          scrollTop: 0,
+          success() {
+            that.updatePosition(keyboardHeight)
+            that.editorCtx.scrollIntoView()
           }
-        }
-      },
-    }]
+        })
+      }, duration)
+
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
+  updatePosition(keyboardHeight) {
+    const toolbarHeight = 50
+    const { windowHeight, platform } = wx.getSystemInfoSync()
+    let editorHeight = keyboardHeight > 0 ? (windowHeight - keyboardHeight - toolbarHeight) : windowHeight
+    if (keyboardHeight === 0) {
+      this.setData({
+        editorHeight, keyboardHeight,
+        toolBarHeight: this.data.isIOS ? 50 + this._safeHeight : 50,
+        safeHeight: this._safeHeight,
+      })
+    } else {
+      this.setData({ editorHeight, keyboardHeight, 
+        toolBarHeight: 50,
+        safeHeight: 0, 
+      })
+    }
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  calNavigationBarAndStatusBar() {
+    const systemInfo = wx.getSystemInfoSync()
+    const { statusBarHeight, platform } = systemInfo
+    const isIOS = platform === 'ios'
+    const navigationBarHeight = isIOS ? 44 : 48
+    return statusBarHeight + navigationBarHeight
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
+  onEditorReady() {
+    const that = this
+    wx.createSelectorQuery().select('#editor').context(function (res) {
+      that.editorCtx = res.context
+    }).exec()
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
+  blur() {
+    this.editorCtx.blur()
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
+  format(e) {
+    let { name, value } = e.target.dataset
+    if (!name) return
+    // console.log('format', name, value)
+    this.editorCtx.format(name, value)
 
   },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  onStatusChange(e) {
+    const formats = e.detail
+    this.setData({ formats })
+  },
+  insertDivider() {
+    this.editorCtx.insertDivider({
+      success: function () {
+        console.log('insert divider success')
+      }
+    })
+  },
+  clear() {
+    this.editorCtx.clear({
+      success: function (res) {
+        console.log("clear success")
+      }
+    })
+  },
+  removeFormat() {
+    this.editorCtx.removeFormat()
+  },
+  insertDate() {
+    const date = new Date()
+    const formatDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+    this.editorCtx.insertText({
+      text: formatDate
+    })
+  },
+  insertImage() {
+    const that = this
+    wx.chooseImage({
+      count: 1,
+      success: function (res) {
+        that.editorCtx.insertImage({
+          src: res.tempFilePaths[0],
+          data: {
+            id: 'abcd',
+            role: 'god'
+          },
+          width: '80%',
+          success: function () {
+            console.log('insert image success')
+          }
+        })
+      }
+    })
   }
 })
