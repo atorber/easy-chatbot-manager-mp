@@ -8,7 +8,7 @@ const db = cloud.database()
 const _ = db.command
 
 var host = 'awgnfty.iot.gz.baidubce.com'
-var password = 'tVChsBFQtqLEaCCk'
+var password = ''
 var username = 'awgnfty/service_client'
 var clientId = 'auto_open' + new Date().getTime()
 
