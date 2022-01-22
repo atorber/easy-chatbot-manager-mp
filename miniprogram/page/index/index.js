@@ -3,71 +3,7 @@ const app = getApp()
 const db = wx.cloud.database()
 const _ = db.command
 
-const util = require('../../util/util')
-const tobase64 = require('../../util/base64')
-// 加密
-console.log(util.Encrypt('123456'))
-// 5A09AE89579945B7AB80A9DC08F66FAA
-// 解密
-console.log(util.Decrypt('5A09AE89579945B7AB80A9DC08F66FAA'))
-// 123456
-
 let header = {}
-
-wx.request({
-  method: 'GET',
-  url: 'https://api.airtable.com/v0/applclZm5iXmTphEu/ChatRecord',
-  header: {
-    'Authorization': 'Bearer keypHmMOxLky9wU8T',
-    'X-Airtable-Client-Secret': 'foo-123123'
-  },
-  success: res => {
-    console.debug('airtable==============', res)
-  },
-  fail: err => {
-    console.error(err)
-  }
-})
-
-var protobuf = require('../../weichatPb/protobuf.js');
-app.globalData._protobuf = protobuf;
-
-var messageConfig = require('./message');
-var MessageRoot = protobuf.Root.fromJSON(messageConfig);
-var MessageMessage = MessageRoot.lookupType("Message");
-
-function test1() {
-  let properties = {
-    "sn": "ABC0000001",
-    "firmware_version": 1.2,
-    "location": { "latitude": 80.001, "longitude": 120.1 },
-  }
-  let cur_time = new Date().getTime()
-  properties = JSON.stringify(properties)
-  var payload = {
-    "reqId": 'xxxxxxxxxxx',
-    "method": "thing.property.post",
-    "version": "1.0",
-    "timestamp": String(cur_time),
-    "timeHms": "2021-12-1",
-    "properties": properties
-  }
-  console.debug(payload)
-  var message = MessageMessage.create(payload);
-  var buffer = MessageMessage.encode(message).finish();
-  console.log("buffer", buffer);
-
-  // buffer = util.Encrypt(buffer)
-  // buffer = util.Decrypt(buffer)
-  // console.log(buffer)
-
-  var deMessage = MessageMessage.decode(buffer);
-  deMessage.properties = JSON.parse(deMessage.properties)
-  deMessage.timestamp = Number(deMessage.timestamp)
-  console.log("deMessage", deMessage);
-}
-
-test1()
 
 var {
   Client,
@@ -75,7 +11,7 @@ var {
 } = require('../../util/paho-mqtt')
 
 // const IoTCoreId = 'alvxdkj'
-let DeviceKey = 'mpclient'
+let DeviceKey = ''
 // const DeviceSecret = 'sIQmoZzHwRYLfEUL'
 
 let username = ''
@@ -83,8 +19,8 @@ let password = ''
 const clientid = "mp_chatbot_" + new Date().getTime()
 const host = 'baiduiot.iot.gz.baidubce.com'
 var port = 443
-let events_topic = `$iot/${DeviceKey}/events`
-let msg_topic = `$iot/${DeviceKey}/msg`
+let eventApi = `thing/chatbot/${DeviceKey}/event/post`
+let commandApi = `thing/chatbot/${DeviceKey}/command/invoke`
 
 Page({
 
@@ -92,20 +28,36 @@ Page({
    * 页面的初始数据
    */
   data: {
+    listView: false,
+    tabs: [{ title: '实时' }],
+    activeTab: 0,
+    botIndex: 0,
+    toView: 'msg-1',
+    allMsgArr: [],
+    scrollHeight: '100vh',
     wxid: '',
     inter: '',
     latestMsgArr: ['1', '2'],
     latestMsg: {
       "1": {
-        name: '大师',
-        text: '在吗',
-        image: '',
+        talker: {
+          name: '大师',
+        },
+        room: {},
+        content: {
+          text: '在吗'
+        },
         ts: '21:59',
         count: 0
       },
       "2": {
-        name: '超哥',
-        text: '在吗在啊在啊',
+        talker: {
+          name: '超哥',
+        },
+        room: {},
+        content: {
+          text: '在吗在啊在啊',
+        },
         image: '',
         ts: '16:45\n昨天',
         count: 5
@@ -163,16 +115,17 @@ Page({
               let secret = res.data
               username = secret.mqtt.username
               password = secret.mqtt.password
-              DeviceKey = secret.mqtt.DeviceKey
-              events_topic = `$iot/${DeviceKey}/events`
-              msg_topic = `$iot/${DeviceKey}/msg`
+              DeviceKey = secret.chatbot[0]
+              eventApi = `thing/chatbot/${DeviceKey}/event/post`
+              commandApi = `thing/chatbot/${DeviceKey}/command/invoke`
               header = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${secret.vika.token}`
               }
               app.globalData.secret = secret
               that.setData({
-                secret
+                secret,
+                bot: secret.chatbot[that.data.botIndex]
               })
               if (secret.mqtt) {
                 this.doConnect()
@@ -220,8 +173,22 @@ Page({
         })
       }
     })
+    wx.getStorage({
+      key: 'allMsgArr',
+      success(res) {
+        // console.log(res.data)
+        that.setData({
+          allMsgArr: res.data
+        })
+      }
+    })
   },
-
+  toLogin() {
+    let that = this
+    this.setData({
+      listView: !that.data.listView
+    })
+  },
   doConnect: function () {
     var that = this;
 
@@ -287,7 +254,7 @@ Page({
           }
         }
 
-        that.doSubscribe(events_topic)
+        that.doSubscribe(eventApi)
 
 
       },
@@ -444,64 +411,34 @@ Page({
     var time_text = new Date().toUTCString()
     let latestMsg = that.data.latestMsg
     let latestMsgArr = that.data.latestMsgArr || []
+    let allMsgArr = that.data.allMsgArr || []
     // console.debug(e.payloadBytes)
-    let payload = MessageMessage.decode(e.payloadBytes);
+    let payload = JSON.parse(e.payloadString);
     console.debug(payload)
-    if (payload.events) {
-      payload.events = JSON.parse(payload.events)
-    }
-    if (payload.properties) {
-      payload.properties = JSON.parse(payload.properties)
-    }
-    payload.timestamp = Number(payload.timestamp)
-
-    // let payload = JSON.parse(e.payloadString)
     if (payload.events && payload.events.message) {
       let msg = payload.events.message
-      let timeHms = payload.timeHms
-      let reqId = payload.reqId
       let id = msg.room.id || msg.talker.id
-      msg.timeHms = timeHms
       latestMsg[id] = msg
+      allMsgArr.push(msg)
       let index = latestMsgArr.indexOf(id)
       if (index != -1) {
         latestMsgArr.splice(index, 1)
       }
       latestMsgArr.unshift(id)
-      // latestMsg[msg.room.id || msg.talker.id].text = msg.text.slice(0, 18)
+      latestMsg[id].content.text = msg.content.text.slice(0, 18)
+      latestMsg[id].timeHmsShort = latestMsg[id].timeHms.split(' ').join('\n')
       if (that.eventChannel && id == that.data.wxid) {
         that.eventChannel.emit('acceptDataFromOpenerPage', { msg })
       }
-      // wx.request({
-      //   method: 'POST',
-      //   url: 'https://api.vika.cn/fusion/v1/datasheets/dstsL6DH8BxYP4Fbl4/records?viewId=viwutsKh3DuAd&fieldKey=name',
-      //   header,
-      //   data: {
-      //     "records": [
-      //       {
-      //         "fields": {
-      //           "ID": reqId,
-      //           "时间": timeHms,
-      //           "来自": msg.talker._payload.name || '我',
-      //           "接收": msg.room.id ? msg.room._payload.topic : '单聊',
-      //           "内容": msg.text,
-      //           "发送者ID": msg.talker.id != 'null' ? msg.talker.id : '--',
-      //           "接收方ID": msg.room.id ? msg.room.id : '--',
-      //         }
-      //       }
-      //     ],
-      //     "fieldKey": "name"
-      //   },
-      //   success: res => {
-      //     console.debug(res)
-      //   },
-      //   fail: err => {
-      //     console.error(err)
-      //   }
-      // })
+
       this.setData({
         latestMsg,
-        latestMsgArr
+        latestMsgArr,
+        allMsgArr
+      }, res => {
+        that.setData({
+          toView: 'msg-' + (allMsgArr.length - 1)
+        })
       })
       wx.setStorage({
         key: "latestMsg",
@@ -510,6 +447,10 @@ Page({
       wx.setStorage({
         key: "latestMsgArr",
         data: latestMsgArr
+      })
+      wx.setStorage({
+        key: "allMsgArr",
+        data: allMsgArr
       })
     }
 
@@ -664,7 +605,7 @@ Page({
   },
   doPublish: function (text) {
     var that = this
-    var topic = msg_topic
+    var topic = commandApi
     let payload = {
       "reqId": "442c1da4-9d3a-4f9b-a6e9-bfe858e4ac43",
       "method": "thing.command.invoke",
@@ -677,12 +618,7 @@ Page({
         messagePayload: text
       }
     }
-    console.debug(JSON.stringify(payload))
-    // payload = JSON.stringify(payload)
-    payload.params = JSON.stringify(payload.params)
-    payload.timestamp = String(payload.timestamp)
-    var message = MessageMessage.create(payload);
-    payload = MessageMessage.encode(message).finish();
+    payload = JSON.stringify(payload)
     console.debug(payload)
     this.publish(topic, payload, 0, false)
   },

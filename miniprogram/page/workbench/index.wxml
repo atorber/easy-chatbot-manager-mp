@@ -1,2 +1,2 @@
 <!--page/workbench/index.wxml-->
-<mp-grids grids="{{grids}}"></mp-grids>
+<mp-grids grids="{{grids}}" bindtap="jump"></mp-grids>

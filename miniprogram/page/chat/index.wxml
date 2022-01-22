@@ -4,11 +4,19 @@
     <scroll-view scroll-y style="height: {{layoutHeight}}px" scroll-into-view="{{historyList[historyList.length - 1].id}}">
       <block wx:for="{{historyList}}" wx:for-index="idx" wx:key="index" wx:for-item="historyItem">
         <view class="record" hidden="{{historyItem.length === 0}}" id="{{historyItem.id}}">
-          <view class="avator"></view>
+          <view class="avator">
+            <image src="{{historyItem.msg.talker.avatar||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
+          </view>
           <view>
-            <view style="font-size: 13px;color: #888888;">{{historyItem.msg.talker._payload.name||'匿名'}}</view>
+            <view style="font-size: 13px;color: #888888;">{{historyItem.msg.talker.name||'匿名'}}</view>
             <view class="comment">
-              <block wx:for="{{historyItem.emoji}}" wx:key="*this">
+              <block wx:if="{{!historyItem.emoji}}">
+                <block>{{historyItem.msg.content.text}}</block>
+                <view wx:if="{{item.type === 2}}" style="display: inline-block; width: {{lineHeight}}px; height: {{lineHeight}}px">
+                  <view class="{{item.imageClass}}" style="background-image: url({{emojiSource}});transform-origin: 0 0; transform: scale({{lineHeight / 64}});"></view>
+                </view>
+              </block>
+              <block wx:if="{{historyItem.emoji}}" wx:for="{{historyItem.emoji}}" wx:key="*this">
                 <block wx:if="{{item.type === 1}}">{{item.content}}</block>
                 <view wx:if="{{item.type === 2}}" style="display: inline-block; width: {{lineHeight}}px; height: {{lineHeight}}px">
                   <view class="{{item.imageClass}}" style="background-image: url({{emojiSource}});transform-origin: 0 0; transform: scale({{lineHeight / 64}});"></view>

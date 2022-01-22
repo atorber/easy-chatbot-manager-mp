@@ -45,13 +45,12 @@ CustomPage({
     this.parseEmoji = emojiInstance.parseEmoji
 
     const eventChannel = this.getOpenerEventChannel()
-    // eventChannel.emit('acceptDataFromOpenedPage', { data: 'test2' });
-    eventChannel.emit('someEvent', { data: 'test2' });
+    eventChannel.emit('acceptDataFromOpenedPage', { data: 'test2' });
     // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
     eventChannel.on('acceptDataFromOpenerPage', function (data) {
       console.log('acceptDataFromOpenerPage 2', data)
       if (data.wxid) {
-        let title = data.msg.room&&data.msg.room.id?data.msg.room._payload.topic:data.msg.talker._payload.name
+        let title = data.msg && data.msg.room && data.msg.room.id ? data.msg.room.topic : data.msg.talker.name
         wx.setNavigationBarTitle({
           title,
           success() {
@@ -64,10 +63,18 @@ CustomPage({
         that.setData({
           wx: data
         })
-      }
-      // that.update_msgs(data.msg)
+      } else {
+        if (data.msg.room.id == that.data.wx.wxid || data.msg.talker.id == that.data.wx.wxid) {
+          let historyList = that.data.historyList
+          historyList.push(data)
+          that.setData({
+            historyList
+          })
+        }
 
-      that.onsend(data.msg)
+      }
+
+      // that.onsend(data.msg)
 
     })
   },
@@ -132,8 +139,9 @@ CustomPage({
     const value = e.detail.value
     this.data.comment = value
   },
-  onConfirm() {
-    this.onsend()
+  onConfirm(e) {
+    console.debug(e)
+    this.onsend(e)
   },
   insertEmoji(evt) {
     const emotionName = evt.detail.emotionName
@@ -146,18 +154,21 @@ CustomPage({
     })
   },
   onsend(e) {
+    console.debug(e)
     let that = this
-    const comment = e.text || this.data.comment||''
+    const comment = (e.detail && e.detail.value) || this.data.comment || ''
+    let msg = that.data.wx.msg
+    msg.content.text = comment
+
     if (comment) {
       const parsedComment = {
         emoji: this.parseEmoji(comment),
         id: `emoji_${this.data.historyList.length}`,
-        msg: e.text ? e : that.data.wx.msg
+        msg
       }
-      if (this.data.historyList.length != 0 && !e.messageType) {
-        const eventChannel = this.getOpenerEventChannel()
-        eventChannel.emit('acceptDataFromOpenedPage', { comment });
-      }
+      const eventChannel = this.getOpenerEventChannel()
+      eventChannel.emit('acceptDataFromOpenedPage', { comment });
+
       this.setData({
         historyList: [...this.data.historyList, parsedComment],
         comment: '',

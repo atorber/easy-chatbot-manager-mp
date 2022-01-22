@@ -1,16 +1,24 @@
 <!--page/index/index.wxml-->
-<view class="page" data-weui-theme="{{theme}}">
+<!-- <mp-tabs 
+  tabs="{{tabs}}" 
+  activeTab="{{activeTab}}" 
+  swiperClass="weui-tabs-swiper"
+  bindtabclick="onTabClick"
+  bindchange="onChange"
+  activeClass="tab-bar-title__selected"
+> </mp-tabs> -->
+
+<view wx:if="{{listView}}" class="page" data-weui-theme="{{theme}}">
   <view class="page__bd">
     <mp-cells title="">
       <mp-cell wx:for="{{latestMsgArr}}" wx:key="index" bindtap="toHome" data-i="{{index}}" data-wxid="{{item}}" data-msg="{{latestMsg[item]}}">
         <view slot="title" style="position: relative;margin-right: 10px;">
-          <image src="{{latestMsg[item].image||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
+          <image src="{{latestMsg[item].room.avatar||latestMsg[item].talker.avatar||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
           <mp-badge wx:if="{{latestMsg[item].count>0}}" content="{{latestMsg[item].count>99?'99+':latestMsg[item].count}}" style="position: absolute;top: -.4em;right: -.4em;" />
         </view>
-        <view class="impleName" wx:if="{{latestMsg[item].name}}">{{latestMsg[item].name}}</view>
-        <view class="impleName" wx:if="{{latestMsg[item].room&&latestMsg[item].room._payload.topic}}">{{latestMsg[item].room._payload.topic}}</view>
-        <view class="impleName" wx:if="{{!latestMsg[item].room.id&&latestMsg[item].talker.id}}">{{latestMsg[item].talker.id}}</view>
-        <view class="impleName" style="font-size: 13px;color: #888888;">{{latestMsg[item].text}}</view>
+        <view class="impleName">{{latestMsg[item].room.topic||latestMsg[item].talker.name}}</view>
+        <!-- <view class="impleName" wx:if="{{!latestMsg[item].room.id&&latestMsg[item].talker.id}}">{{latestMsg[item].talker.id}}</view> -->
+        <view class="impleName" style="font-size: 13px;color: #888888;">{{latestMsg[item].content.text}}</view>
         <view slot="footer">
           <view style="display: inline-block;vertical-align:middle; font-size: 26rpx;">
             <text>{{latestMsg[item].ts||latestMsg[item].timeHms||'12:00'}}</text>
@@ -20,3 +28,104 @@
     </mp-cells>
   </view>
 </view>
+
+<scroll-view wx:if="{{!listView}}" scroll-y scroll-into-view='{{toView}}' style='height: {{scrollHeight}};'>
+  <view class="cu-card dynamic no-card">
+    <view class="cu-item shadow">
+      <view class="cu-list menu-avatar">
+        <view class="cu-item">
+          <view wx:if="{{!bot.userSelf||!bot.userSelf.payload.avatar}}" class="cu-avatar bg-blue lg radius">
+            {{bot.userSelf.payload.name[0]||'匿'}}
+            <view class="cu-tag badge">{{bot.online?'在线':'离线'}}</view>
+          </view>
+          <view wx:else class="cu-avatar radius lg" style="background-image:url({{bot.userSelf.payload.avatar}});">
+            <view class="cu-tag badge">{{bot.online?'在线':'离线'}}</view>
+          </view>
+          <view class="content flex-sub">
+            <view>
+              <text>{{bot||'未绑定'}}</text>
+              <view class="cu-tag round bg-orange sm">切换</view>
+            </view>
+            <view class="text-gray text-sm flex justify-between">
+              {{bot||'--'}}
+            </view>
+          </view>
+          <view class="action" bindtap="toLogin">
+            <view class="text-grey text-xs">列表视图</view>
+            <view class="cuIcon-notice_forbid_fill text-gray"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="cu-chat">
+    <block wx:for="{{allMsgArr}}" wx:key="index">
+
+      <view id='msg-{{index}}' bindlongtap="set_more" wx:if="{{item.talker.id==bot.userSelf.id}}" class="cu-item {{item.talker.id==bot.userSelf.id?'self':''}}">
+        <view wx:if="{{item.msg.type==6}}" class="main">
+          <image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" class="radius" mode="widthFix">
+          </image>
+        </view>
+        <view wx:if="{{item.msg.type!=6}}" class="main">
+          <view class="content bg-green shadow">
+            <text>{{item.msg.type==7?item.msg.text:(item.msg.messageType||'非文本消息')}}</text>
+          </view>
+        </view>
+
+        <view class="cu-avatar radius" style="background-image:url({{item.msg.talker.payload.avatar}});">
+        </view>
+        <view class="date">{{item.timeHms}}</view>
+      </view>
+      <view id='msg-{{index}}' bindlongtap="set_more" wx:if="{{item.talker.id!=bot.userSelf.id}}" class="cu-item">
+        <view class="cu-avatar radius" style="background-image:url({{item.talker.avatar}});">
+        </view>
+
+        <view wx:if="{{item.content.messageType=='Image'}}" class="main">
+          <image src="https://{{secret.chatbot[botIndex]}}.gz.bcebos.com/Image/{{item.id}}.jpg" class="radius" mode="widthFix">
+          </image>
+        </view>
+        <view wx:if="{{item.content.messageType=='Url'}}" class="main">
+          <view class="content shadow">
+            <view class="cu-card article no-card">
+              <view class="cu-item" style="padding: 0rpx;">
+                <view class="">
+                  <view class="text-cut">{{item.content.text}}</view>
+                </view>
+                <view class="content" style="padding: 0rpx;">
+                  <view class="desc">
+                    <view class="text-content" style="height: 3.5em;">{{item.msg.textBox.payload.description}}</view>
+                    <view>
+                      <view class="cu-tag bg-red light sm round">正义天使</view>
+                      <!-- <view class="cu-tag bg-green light sm round">史诗</view> -->
+                    </view>
+                  </view>
+                  <image style="width: 120rpx;height: 120rpx;" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" mode="aspectFill">
+                  </image>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{item.content.messageType!='Image'&&item.content.messageType!='Url'}}" class="main">
+          <view class="content shadow">
+            <text>{{item.content.text}}</text>
+            <view bindtap="toHome" data-i="{{index}}" data-wxid="{{item.room.id||item.talker.id}}" data-msg="{{item}}" class="cu-tag badge" style="left:-30rpx;right:auto;">{{item.talker.name||'-_-'}}{{item.room.topic?'@'+item.room.topic:''}}</view>
+          </view>
+        </view>
+        <view class="date text-cut" style="width: calc(100% - 160rpx);">
+          <!-- <view class="cu-tag bg-blue round sm margin-right-sm text-cut" style="max-width: 40%;"
+            bindtap="toChatFromMessages" data-id="{{item.room.id||item.talker.id}}" data-i="{{index}}">
+            {{item.room.topic||item.talker.name||'-_-'}}</view> -->
+          <!-- <wux-timeago to="{{ item.timestamp }}" lang="{{ zh_CN }}" /> -->
+          <text>{{item.timeHms}}</text>
+          <!-- <wux-popover placement="topRight" title="Title" content="Content">
+            <text>{{item.timeHms}}</text>
+          </wux-popover> -->
+        </view>
+
+      </view>
+    </block>
+  </view>
+
+</scroll-view>

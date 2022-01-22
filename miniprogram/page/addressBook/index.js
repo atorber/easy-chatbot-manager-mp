@@ -71,6 +71,7 @@ CustomPage({
     ]
   },
   getGroup() {
+    let that = this
     let header = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.data.secret.vika.token}`
@@ -92,6 +93,25 @@ CustomPage({
         })
         this.setData({
           tabs
+        })
+      },
+      fail: err => {
+        console.error(err)
+      }
+    })
+
+    wx.request({
+      method: 'GET',
+      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.vika.sysTables.bot}/records?fieldKey=name`,
+      header,
+      success: res => {
+        console.debug(res)
+        let records = res.data.data.records
+        console.debug(records)
+        this.setData({
+          config: records
+        },res=>{
+          that.getCitys()
         })
       },
       fail: err => {
@@ -188,7 +208,6 @@ CustomPage({
       vika: app.globalData.vika
     }, res => {
       this.getGroup()
-      this.getCitys()
     })
   },
   pinyinSort(name) {
@@ -243,30 +262,19 @@ CustomPage({
   },
   getCitys() {
     const that = this
-    wx.getStorage({
-      key: 'bot',
-      success(res) {
-        console.log(res.data)
-        that.setData({
-          bot: res.data
-        })
-        let contactList = res.data.contactList || []
-        let roomList = that.data.bot.roomList || []
-        let alllist = roomList.concat(contactList)
-        // console.debug(JSON.stringify(contactList))
-        let tabs = that.data.tabs
-        tabs[0].members = alllist
-        tabs[1].members = contactList
-        tabs[2].members = roomList
 
-        that.setData({
-          // namelist: that.pinyinSort(contactList),
-          list: that.pinyinSort(alllist)
-        })
-      },
-      fail: err => {
-        console.error(err)
-      }
+    let contactList = JSON.parse(that.data.config[1].fields.value) || []
+    let roomList = JSON.parse(that.data.config[2].fields.value) || []
+    let alllist = roomList.concat(contactList)
+    // console.debug(JSON.stringify(contactList))
+    let tabs = that.data.tabs
+    tabs[0].members = alllist
+    tabs[1].members = contactList
+    tabs[2].members = roomList
+
+    that.setData({
+      // namelist: that.pinyinSort(contactList),
+      list: that.pinyinSort(alllist)
     })
   }
 
