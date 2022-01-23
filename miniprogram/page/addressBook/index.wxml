@@ -15,7 +15,7 @@
   <mp-indexList id="0" class="city__list" list="{{list}}">
     <view class="padding">
       <!-- <button type="primary" plain="true">添加</button> -->
-      <button wx:if="{{activeTab<=2}}" class="mini-btn" type="primary" size="mini">+ 添加分组</button>
+      <button wx:if="{{activeTab==0}}" class="mini-btn" type="primary" size="mini">+ 添加分组</button>
       <button wx:if="{{activeTab>2}}" class="mini-btn text-center" type="primary" size="mini">群发消息</button>
       <button wx:if="{{activeTab>2}}" class="mini-btn text-center" type="" size="mini">删除分组</button>
     </view>

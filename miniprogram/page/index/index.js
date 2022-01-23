@@ -25,12 +25,21 @@ Page({
    * 页面的初始数据
    */
   data: {
-    listView: false,
+    listView: true,
     tabs: [{ title: '实时' }],
     activeTab: 0,
     botIndex: 0,
     toView: 'msg-1',
-    allMsgArr: [],
+    allMsgArr: [{
+      talker:{
+        avatar:'',
+        name:'超哥',
+        id:'ledongmao'
+      },
+      content:{
+text:'这是一个IM前端UI demo示例小程序'
+      }
+    }],
     scrollHeight: '100vh',
     wxid: '',
     inter: '',
@@ -53,7 +62,7 @@ Page({
         },
         room: {},
         content: {
-          text: '在吗在啊在啊',
+          text: 'IM前端UI demo示例小程序',
         },
         image: '',
         ts: '16:45\n昨天',
