@@ -10,17 +10,14 @@ var {
   Message
 } = require('../../util/paho-mqtt')
 
-// const IoTCoreId = 'alvxdkj'
-let DeviceKey = ''
-// const DeviceSecret = 'sIQmoZzHwRYLfEUL'
-
+let botId = ''
 let username = ''
 let password = ''
 const clientid = "mp_chatbot_" + new Date().getTime()
 const host = 'baiduiot.iot.gz.baidubce.com'
 var port = 443
-let eventApi = `thing/chatbot/${DeviceKey}/event/post`
-let commandApi = `thing/chatbot/${DeviceKey}/command/invoke`
+let eventApi = `thing/chatbot/${botId}/event/post`
+let commandApi = `thing/chatbot/${botId}/command/invoke`
 
 Page({
 
@@ -106,54 +103,10 @@ Page({
         that.setData({
           user
         }, res => {
-
-          db.collection('secret')
-            .doc(user.openid)
-            .get()
-            .then(res => {
-              console.debug(res)
-              let secret = res.data
-              username = secret.mqtt.username
-              password = secret.mqtt.password
-              DeviceKey = secret.chatbot[0]
-              eventApi = `thing/chatbot/${DeviceKey}/event/post`
-              commandApi = `thing/chatbot/${DeviceKey}/command/invoke`
-              header = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${secret.vika.token}`
-              }
-              app.globalData.secret = secret
-              that.setData({
-                secret,
-                bot: secret.chatbot[that.data.botIndex]
-              })
-              if (secret.mqtt) {
-                this.doConnect()
-              }
-            })
-            .catch(err => {
-              console.error(err)
-              wx.showToast({
-                title: '请初始化配置',
-              })
-            })
+          that.getsecret(user)
         })
       },
       fail: console.error
-    })
-    wx.cloud.callFunction({
-      name: 'checkconfig',
-      data: {},
-      success: res => {
-        console.debug(res)
-        app.globalData.vika = res.result
-        that.setData({
-          vika: res.result
-        })
-      },
-      fail: err => {
-        console.error(err)
-      }
     })
     wx.getStorage({
       key: 'latestMsg',
@@ -183,7 +136,41 @@ Page({
       }
     })
   },
+  getsecret(user) {
+    let that = this
+    db.collection('secret')
+      .doc(user.openid)
+      .get()
+      .then(res => {
+        console.debug(res)
+        let secret = res.data
+        username = secret.mqtt.username
+        password = secret.mqtt.password
+        botId = secret.mqtt.botId
+        eventApi = `thing/chatbot/${botId}/event/post`
+        commandApi = `thing/chatbot/${botId}/command/invoke`
+        header = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${secret.vika.token}`
+        }
+        app.globalData.secret = secret
+        that.setData({
+          secret,
+          bot: botId
+        })
+        if (secret.mqtt) {
+          this.doConnect()
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        wx.showToast({
+          title: '请初始化配置',
+        })
+      })
+  },
   toLogin() {
+    console.debug('toLogin')
     let that = this
     this.setData({
       listView: !that.data.listView

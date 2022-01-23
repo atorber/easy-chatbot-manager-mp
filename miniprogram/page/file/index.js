@@ -1,7 +1,7 @@
 // page/file/index.js
 let header = {
   'Content-Type': 'application/json',
-  'Authorization': 'Bearer uskv0Tuj5MxADtcsI1C0Vkh'
+  'Authorization': 'Bearer token'
 }
 
 Page({

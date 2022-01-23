@@ -1,9 +1,7 @@
 // page/material/index.js
-let header = {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer uskv0Tuj5MxADtcsI1C0Vkh'
-}
-
+const app = getApp()
+const db = wx.cloud.database()
+const _ = db.command
 Page({
 
   /**
@@ -26,7 +24,7 @@ Page({
       }
     }
   },
-  toAdd(){
+  toAdd() {
     wx.navigateTo({
       url: '/page/material/add/index',
     })
@@ -37,9 +35,13 @@ Page({
     console.debug(msg)
   },
   getList() {
+    let header = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.data.secret.vika.token}`
+    }
     wx.request({
       method: 'GET',
-      url: 'https://api.vika.cn/fusion/v1/datasheets/dstvpDQSp1KXGaWWUr/records?viewId=viwvyJeaL1Hpu&fieldKey=name',
+      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.secret.vika.material}/records?viewId=viwvyJeaL1Hpu&fieldKey=name`,
       header,
       success: res => {
         console.debug(res.data)
@@ -56,7 +58,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.getList()
+    this.setData({
+      secret: app.globalData.secret
+    }, res => {
+      this.getList()
+    })
   },
 
   /**

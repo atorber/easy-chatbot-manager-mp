@@ -9,7 +9,16 @@ Page({
    * 页面的初始数据
    */
   data: {
-    secret: {"a":100}
+    secret: {
+      "mqtt": {
+        "DeviceKey": "机器人ID",
+        "password": "MQTT密码",
+        "username": "MQTT用户名"
+      },
+      "vika": {
+        "token": "维格表token"
+      }
+    }
   },
   getSecret(openid) {
     db.collection('secret').doc(openid).get().then(res => {

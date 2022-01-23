@@ -79,7 +79,7 @@ CustomPage({
 
     wx.request({
       method: 'GET',
-      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.vika.sysTables.group}/records?fieldKey=name`,
+      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.secret.vika.group}/records?fieldKey=name`,
       header,
       success: res => {
         console.debug(res)
@@ -102,14 +102,19 @@ CustomPage({
 
     wx.request({
       method: 'GET',
-      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.vika.sysTables.bot}/records?fieldKey=name`,
+      url: `https://api.vika.cn/fusion/v1/datasheets/${this.data.secret.vika.bot}/records?fieldKey=name`,
       header,
       success: res => {
         console.debug(res)
         let records = res.data.data.records
         console.debug(records)
+        let vika_config = {}
+        for(let record in records){
+          vika_config[records[record].fields.key] = JSON.parse(records[record].fields.value)
+        }
+        app.globalData.vika_config=vika_config
         this.setData({
-          config: records
+          vika_config
         },res=>{
           that.getCitys()
         })
@@ -263,8 +268,8 @@ CustomPage({
   getCitys() {
     const that = this
 
-    let contactList = JSON.parse(that.data.config[1].fields.value) || []
-    let roomList = JSON.parse(that.data.config[2].fields.value) || []
+    let contactList = that.data.vika_config.contactList|| []
+    let roomList = that.data.vika_config.roomList || []
     let alllist = roomList.concat(contactList)
     // console.debug(JSON.stringify(contactList))
     let tabs = that.data.tabs

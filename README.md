@@ -1,15 +1,38 @@
-# 微信小程序示例
-微信小程序示例源码，欢迎扫描以下小程序码体验。
+# chatbot微信小程序客户端
 
-> 提示：请使用微信开发者工具或微信客户端 6.7.2 及以上版本运行。
-
-<img width="200" src="https://res.wx.qq.com/op_res/QqOF7ydl0dkpq-orpebXL-gBspr08VjoFOFGrWvKF9IULLhfT9XhnsSKlvc0gI8d">
+chatbot微信小程序客户端源码。
 
 ## 使用
 
+### 配置信息
+
+在发布或预览小程序客户端，个人中心>配置 页面配置如下信息。
+
 ```
-cd demo
-npm i
+{
+    "mqtt":{
+        "botId":"机器人账号ID",
+        "password":"MQTT密码",
+        "username":"MQTT用户名"
+    },
+    "vika":{
+        "ChatRecord":"表ID",
+        "bot":"表ID",
+        "group":"表ID",
+        "material":"表ID",
+        "spaceId":"空间ID",
+        "token":"维格表token"
+    }
+}
+```
+
+> 1、特别注意此小程序中使用了维格表vika、百度云物联网核心套件，需开通相应账号获取资源配置信息
+
+> 2、客户端需配合[easy-chatbot-client](https://github.com/atorber/easy-chatbot-client)使用，请到小规模中查看使用方法
+
+### 运行
+
+```
 cd miniprogram
 npm i
 ```
@@ -22,16 +45,34 @@ npm i
 
 如果你有 bug 反馈或其他任何建议，欢迎提 issue 给我们。
 
-如果你愿意一起来完善小程序示例，欢迎通过 PR 的方式贡献代码。为了保证代码风格的统一，在编写代码之前，请在项目根目录运行以下命令安装依赖：
-
-```
-npm install
-```
-同时，确保你的代码可以通过 Lint 检查：
-```
-npm run lint
-```
+如果你愿意一起来完善，欢迎通过 PR 的方式贡献代码。
 
 ## 截图
 
-<img width="375" src="https://res.wx.qq.com/op_res/0_vsSii5DaG-1hoXcqmBCT_tPShgSPKi3_FBVuVj1tu1ZdZD8lwYNrSQm3mdswI2">
+### 消息-实时消息模式
+
+<img width="375" src="./docs/images/1.0.png">
+
+### 消息-聊天列表模式
+
+<img width="375" src="./docs/images/1.2.png">
+
+### 消息-聊天窗口
+
+<img width="375" src="./docs/images/1.3.png">
+
+### 通讯录
+
+<img width="375" src="./docs/images/2.0.png">
+
+### 工作台
+
+<img width="375" src="./docs/images/3.0.png">
+
+### 素材库
+
+<img width="375" src="./docs/images/4.0.png">
+
+### 个人中心
+
+<img width="375" src="./docs/images/5.0.png">

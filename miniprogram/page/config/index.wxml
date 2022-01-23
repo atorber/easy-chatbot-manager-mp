@@ -13,7 +13,7 @@
 
       <view class="btn-area">
         <button type="primary" formType="submit">保存</button>
-        <button formType="reset">复制模板</button>
+        <button formType="reset">重置</button>
       </view>
     </form>
   </view>

@@ -9,9 +9,37 @@
 > </mp-tabs> -->
 
 <view wx:if="{{listView}}" class="page" data-weui-theme="{{theme}}">
+  <view class="cu-card dynamic no-card">
+    <view class="cu-item shadow">
+      <view class="cu-list menu-avatar">
+        <view class="cu-item">
+          <view wx:if="{{!bot.userSelf||!bot.userSelf.payload.avatar}}" class="cu-avatar bg-blue lg radius">
+            {{bot.userSelf.payload.name[0]||'匿'}}
+            <view class="cu-tag badge">{{bot.online?'在线':'离线'}}</view>
+          </view>
+          <view wx:else class="cu-avatar radius lg" style="background-image:url({{bot.userSelf.payload.avatar}});">
+            <view class="cu-tag badge">{{bot.online?'在线':'离线'}}</view>
+          </view>
+          <view class="content flex-sub" style="max-width: 50%;">
+            <view>
+              <text>{{bot||'未绑定'}}</text>
+              <view class="cu-tag round bg-orange sm">切换</view>
+            </view>
+            <view class="text-gray text-sm flex justify-between">
+              {{bot||'--'}}
+            </view>
+          </view>
+          <view class="action" bindtap="toLogin">
+            <view class="text-grey text-xs">实时消息</view>
+            <view class="cuIcon-notice_forbid_fill text-gray"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
   <view class="page__bd">
     <mp-cells title="">
-      <mp-cell wx:for="{{latestMsgArr}}" wx:key="index" bindtap="toHome" data-i="{{index}}" data-wxid="{{item}}" data-msg="{{latestMsg[item]}}">
+      <mp-cell wx:if="{{(latestMsgArr.length>2&&(index<latestMsgArr.length-2))||latestMsgArr.length<=2}}" wx:for="{{latestMsgArr}}" wx:key="index" bindtap="toHome" data-i="{{index}}" data-wxid="{{item}}" data-msg="{{latestMsg[item]}}">
         <view slot="title" style="position: relative;margin-right: 10px;">
           <image src="{{latestMsg[item].room.avatar||latestMsg[item].talker.avatar||'../images/pic_160.png'}}" style="width: 50px; height: 50px; display: block" />
           <mp-badge wx:if="{{latestMsg[item].count>0}}" content="{{latestMsg[item].count>99?'99+':latestMsg[item].count}}" style="position: absolute;top: -.4em;right: -.4em;" />
@@ -41,7 +69,7 @@
           <view wx:else class="cu-avatar radius lg" style="background-image:url({{bot.userSelf.payload.avatar}});">
             <view class="cu-tag badge">{{bot.online?'在线':'离线'}}</view>
           </view>
-          <view class="content flex-sub">
+          <view class="content flex-sub" style="max-width: 50%;">
             <view>
               <text>{{bot||'未绑定'}}</text>
               <view class="cu-tag round bg-orange sm">切换</view>
@@ -51,17 +79,15 @@
             </view>
           </view>
           <view class="action" bindtap="toLogin">
-            <view class="text-grey text-xs">列表视图</view>
+            <view class="text-grey text-xs">聊天列表</view>
             <view class="cuIcon-notice_forbid_fill text-gray"></view>
           </view>
         </view>
       </view>
     </view>
   </view>
-
   <view class="cu-chat">
     <block wx:for="{{allMsgArr}}" wx:key="index">
-
       <view id='msg-{{index}}' bindlongtap="set_more" wx:if="{{item.talker.id==bot.userSelf.id}}" class="cu-item {{item.talker.id==bot.userSelf.id?'self':''}}">
         <view wx:if="{{item.msg.type==6}}" class="main">
           <image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" class="radius" mode="widthFix">
@@ -82,7 +108,7 @@
         </view>
 
         <view wx:if="{{item.content.messageType=='Image'}}" class="main">
-          <image src="https://{{secret.chatbot[botIndex]}}.gz.bcebos.com/Image/{{item.id}}.jpg" class="radius" mode="widthFix">
+          <image src="https://{{bot}}.gz.bcebos.com/Image/{{item.id}}.jpg" class="radius" mode="widthFix">
           </image>
         </view>
         <view wx:if="{{item.content.messageType=='Url'}}" class="main">
