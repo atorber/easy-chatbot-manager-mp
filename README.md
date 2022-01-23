@@ -38,7 +38,7 @@ chatbot微信小程序客户端源码。
 
 > 2. 特别注意此小程序中使用了维格表vika、百度云物联网核心套件，需开通相应账号获取资源配置信息
 
-> 3. 客户端需配合[easy-chatbot-client](https://github.com/atorber/easy-chatbot-client)使用，请到小规模中查看使用方法
+> 3. 客户端需配合[easy-chatbot-client](https://github.com/atorber/easy-chatbot-client)使用，请到项目中查看使用方法
 
 ### 运行
 
