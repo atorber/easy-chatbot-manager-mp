@@ -10,7 +10,7 @@ chatbot微信小程序客户端源码。
 
 在小程序开发者工具云开发控制台下创建如下数据表
 
-<img width="375" src="./docs/images/0.1.png">
+[1](./docs/images/0.1.png)
 
 ### 小程序客户端配置
 
