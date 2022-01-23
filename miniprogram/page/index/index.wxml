@@ -79,7 +79,7 @@
             </view>
           </view>
           <view class="action" bindtap="toLogin">
-            <view class="text-grey text-xs">聊天列表</view>
+            <view class="text-grey text-xs">消息列表</view>
             <view class="cuIcon-notice_forbid_fill text-gray"></view>
           </view>
         </view>
