@@ -231,25 +231,25 @@
         "pagePath": "page/addressBook/index",
         "iconPath": "@iconPathComponent",
         "selectedIconPath": "@selectedIconPathComponent",
-        "text": "通讯录"
+        "text": "联系人"
       },
       {
         "pagePath": "page/workbench/index",
         "iconPath": "@iconPathComponent1",
         "selectedIconPath": "@selectedIconPathComponent1",
-        "text": "工作台"
+        "text": "应用"
       },
       {
         "pagePath": "page/material/index",
         "iconPath": "@iconPathCloud1",
         "selectedIconPath": "@selectedIconPathCloud1",
-        "text": "素材"
+        "text": "素材库"
       },
       {
         "pagePath": "page/userCenter/index",
         "iconPath": "@iconPathAPI",
         "selectedIconPath": "@selectedIconPathAPI",
-        "text": "我"
+        "text": "我的"
       }
     ]
   },
